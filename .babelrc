@@ -1,0 +1,11 @@
+{
+  "env": {
+    // Note that this file is psecifically used for testing, and see
+    // webpack.config.js for production configuration, and why it is
+    // there.
+    "test": {
+      "presets": [["@babel/preset-env", {}]],
+      "plugins": ["lodash"]
+    }
+  }
+}

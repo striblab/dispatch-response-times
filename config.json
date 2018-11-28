@@ -1,0 +1,58 @@
+{
+  "about this file": "This document defines configuration for this project that is not content or copy.",
+
+  "projectIdentifier": "dispatch-response-times",
+
+  "data": {
+    "content": "./content.json",
+    "pkg": "./package.json"
+  },
+
+  "cms": {
+    "defaultArticleContentTemplateRewriteClass": "article-lcd-body-content",
+    "pages": [
+      
+      {
+        "id": "index",
+        "articleId": "NEEDS-ARTICLE-ID",
+        "lcd": "NEEDS-LCD-ID",
+        "default": true
+      }
+      
+    ]
+  },
+
+
+  "styles": {
+    "globals": [
+    ]
+  },
+  "js": {
+    "globals": [
+      "https://cdn.polyfill.io/v2/polyfill.min.js",
+      "https://static.startribune.com/assets/libs/pym.js/1.3.2/pym.v1.min.js",
+      "https://static.startribune.com/assets/libs/lodash/4.17.4/lodash.min.js"
+    ]
+  },
+  "publishToken": "e972852ee6e3b0355a4f2dcf27e152ba",
+  "publish": {
+    "default": {
+      "bucket": "static.startribune.com",
+      "path": "news/projects-staging/all/dispatch-response-times",
+      "url": "http://static.startribune.com/news/projects-staging/all/dispatch-response-times/",
+      "cacheSeconds": 30
+    },
+    "testing": {
+      "bucket": "stribtest-bucket",
+      "path": "news/projects/dispatch-response-times",
+      "url": "https://s3.amazonaws.com/stribtest-bucket/news/projects/dispatch-response-times/",
+      "cacheSeconds": 30
+    },
+    "production": {
+      "bucket": "static.startribune.com",
+      "path": "news/projects/all/dispatch-response-times",
+      "url": "http://static.startribune.com/news/projects/all/dispatch-response-times/",
+      "cacheSeconds": 600
+    }
+  }
+}

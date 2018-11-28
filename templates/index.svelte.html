@@ -1,0 +1,58 @@
+<HeadContents {...props} />
+<CMSAssets {...props} />
+
+<div class="project-page-container">
+  <!-- CMS header -->
+  <div class="strib-styles ssa ssb ssc">
+    <CMSNav {...props} />
+  </div>
+
+  <!-- Main content here, this class is used to help with CMS development -->
+  <div class="article-lcd-body-content">
+    <IndexContent {...props} />
+  </div>
+
+  <!-- CMS footer -->
+  <div class="strib-styles ssa ssb ssc">
+    <CMSFooter {...props} />
+  </div>
+
+  <!-- JS parts -->
+  {#if config && config.js && config.js.globals}
+    {#each config.js.globals as js}
+      <script src="{ js }"></script>
+    {/each}
+  {/if}
+
+  <script src="./js/{ cms && cms.js ? cms.js : id }.bundle.js"></script>
+</div>
+
+<script>
+// <head> contents
+import HeadContents from './shared/_head.svelte.html';
+
+// The CMS assets to help simulate the CMS better
+import CMSAssets from './shared/_cms-assets.svelte.html';
+// The CMS footer via the Strib Styles
+import CMSFooter from './shared/_cms-footer.svelte.html';
+// The CMS header nav via the Strib Styles
+import CMSNav from './shared/_cms-nav.svelte.html';
+// Main content.  This is the content that will be copied into the CMS.
+import IndexContent from './_index-content.svelte.html';
+
+
+export default {
+  components: {
+    HeadContents,
+    CMSAssets,
+    CMSFooter,
+    CMSNav,
+    IndexContent
+  },
+
+  computed: {
+    // Get all properties.  Easy to pass to sub components
+    props: state => state
+  }
+};
+</script>

@@ -1,0 +1,29 @@
+/**
+ * Environment noting.
+ */
+
+.environment-note {
+  position: fixed;
+  z-index: 99999;
+  bottom: 0;
+  right: 0;
+  padding: 0.5em 1em;
+  background-color: #222222;
+  color: #ffffff;
+  display: flex;
+
+  // Make specific font, just in case.
+  font-size: 17px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  .environment-note-title {
+    padding-right: 1em;
+  }
+
+  .environment-note-note {
+    font-size: 0.5em;
+    line-height: 1.1em;
+    max-width: 25em;
+  }
+}
