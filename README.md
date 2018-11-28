@@ -2,7 +2,14 @@
 
 A look at dispatch/911 response time in the Twin Cities.
 
-Data analysis from [dispatch-analysis](https://github.com/striblab/dispatch-analysis).
+## Data sources and analysis
+
+- Dispatch data analysis from [dispatch-analysis](https://github.com/striblab/dispatch-analysis).
+  - Example: `cp ../dispatch-analysis/data/build/hexbin-analysis.geo.json ./sources/hexbin-analysis.geo.json`
+- [Minneapolis fire stations](http://opendata.minneapolismn.gov/datasets/fire-stations)
+  - `mkdir -p data/sources && wget -O data/sources/mpls-fire-stations.zip "https://opendata.arcgis.com/datasets/e697e12884fd4421abaf4a71b513f509_0.zip" && unzip data/sources/mpls-fire-stations.zip -d data/sources/mpls-fire-stations && ogr2ogr -f GeoJSON sources/mpls-fire-stations.geo.json data/sources/mpls-fire-stations/MFD_FireStations.shp -t_srs "EPSG:4326"`
+- [Minneapolis police stations](http://opendata.minneapolismn.gov/datasets/police-stations)
+  - `mkdir -p data/sources && wget -O data/sources/mpls-police-stations.zip "https://opendata.arcgis.com/datasets/cb05984116c146cfa6ee35d32f664bd7_0.zip" && unzip data/sources/mpls-police-stations.zip -d data/sources/mpls-police-stations && ogr2ogr -f GeoJSON sources/mpls-police-stations.geo.json data/sources/mpls-police-stations/Police_Stations.shp -t_srs "EPSG:4326"`
 
 ## Publishing
 

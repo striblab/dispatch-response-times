@@ -2,51 +2,126 @@
  * Main JS file for project.
  */
 
-// Define globals that are added through the js.globals in
-// the config.json file, here, mostly so linting won't get triggered
-// and its a good queue of what is available:
-// /* global _ */
+/* global mapboxgl, MapboxGeocoder, $ */
 
 // Dependencies
 import utils from './shared/utils.js';
+import mapConfig from './shared/map-config.js';
+import Popover from './shared/popover.js';
+import responseTimeLayer from './shared/response-time-layer.js';
+import poiLayer from './shared/poi-layer.js';
+//import MapMarker from './shared/marker.js';
 
 // Mark page with note about development or staging
 utils.environmentNoting();
 
+// Mapbox access token
+mapboxgl.accessToken = mapConfig.accessToken;
 
+// Geocoding event issue
+// See: https://github.com/mapbox/mapbox-gl-geocoder/issues/99
+let lastGeocode;
 
-// Adding dependencies
-// ---------------------------------
-// Import local ES6 or CommonJS modules like this:
-// import utilsFn from './shared/utils.js';
-//
-// Or import libraries installed with npm like this:
-// import module from 'module';
+// Create map
+const map = new mapboxgl.Map({
+  container: 'explorable-map',
+  style: mapConfig.style,
+  attributionControl: false,
+  scrollZoom: false
+});
 
-// Adding Svelte templates in the client
-// ---------------------------------
-// We can bring in the same Svelte templates that we use
-// to render the HTML into the client for interactivity.  The key
-// part is that we need to have similar data.
-//
-// First, import the template.  This is the main one, and will
-// include any other templates used in the project.
-// import Content from '../templates/_index-content.svelte.html';
-//
-// Get the data parts that are needed.  There are two ways to do this.
-// If you are using the buildData function to get data, then ?
-//
-// 1. For smaller datasets, just import them like other files.
-// import content from '../assets/data/content.json';
-//
-// 2. For larger data points, utilize window.fetch.
-// let content = await (await window.fetch('../assets/data/content.json')).json();
-//
-// Once you have your data, use it like a Svelte component:
-//
-// const app = new Content({
-//   target: document.querySelector('.article-lcd-body-content'),
-//   data: {
-//     content
-//   }
-// });
+// Center
+map.fitBounds([
+  [-93.3487129795, 44.8787481227],
+  [-92.9895973789, 45.0618881395]
+]);
+
+// Add controls
+map.addControl(new mapboxgl.NavigationControl());
+
+// Geocoder container
+let $geocoderContainer = $('.address-search');
+
+// Geocoding control
+let geocoder = new MapboxGeocoder({
+  accessToken: mapboxgl.accessToken,
+  country: 'us',
+  bbox: [-93.351288, 44.874126, -93.16143, 45.060676]
+});
+$geocoderContainer.append(geocoder.onAdd(map));
+
+// When ready
+map.on('load', () => {
+  // Response time layer
+  let { responseTimeLayerId, responseTimeLayerHighlightId } = responseTimeLayer(
+    map
+  );
+
+  // Add pois (fire/police stations)
+  poiLayer(map);
+
+  // Create popover
+  let popover = new Popover({ map });
+  map.on('click', responseTimeLayerId, e => {
+    if (!e) {
+      map.setFilter(responseTimeLayerHighlightId, ['==', 'hex_id', '']);
+      popover.close();
+      return;
+    }
+
+    // Unsure why, but click doesn't already try to find features
+    var bbox = [[e.point.x - 1, e.point.y - 1], [e.point.x + 1, e.point.y + 1]];
+    var features = map.queryRenderedFeatures(bbox, {
+      layers: [responseTimeLayerId]
+    });
+
+    if (!features || !features.length) {
+      map.setFilter(responseTimeLayerHighlightId, ['==', 'hex_id', '']);
+      popover.close();
+      return;
+    }
+
+    map.setFilter(responseTimeLayerHighlightId, [
+      '==',
+      'hex_id',
+      features[0].properties.hex_id
+    ]);
+    popover.open(features[0]);
+    popover.drawHistogram(features[0]);
+  });
+
+  // Mouseover events
+  map.on('mouseenter', responseTimeLayerId, () => {
+    map.getCanvas().style.cursor = 'pointer';
+  });
+  map.on('mouseleave', responseTimeLayerId, () => {
+    map.getCanvas().style.cursor = '';
+  });
+
+  // Handle geocoder results
+  geocoder.on('result', ({ result }) => {
+    // Don't do anything if same geocode
+    if (result.center.toString() === lastGeocode) {
+      return;
+    }
+
+    // TODO: This doesn't seem to work.  It doesn't work on
+    // first geocode, then gets wrong point on next one.
+    //
+    // // See if we have data
+    // let features = map.queryRenderedFeatures(result.geometry.coordinates, {
+    //   layers: [mapConfig.dataLayer]
+    // });
+    // console.log(features);
+    // if (features && features.length) {
+    //   popover.open({ features });
+    // }
+    // else {
+    //   popover.close();
+    // }
+    popover.close();
+
+    // Mark last geocode
+    lastGeocode = result.center.toString();
+  });
+});
