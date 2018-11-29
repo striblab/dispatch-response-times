@@ -19,6 +19,7 @@
     "node": ">=8.9.0"
   },
   "dependencies": {
+    "d3": "^5.7.0",
     "lodash": "^4.17.5",
     "query-string": "^4.3.2"
   },

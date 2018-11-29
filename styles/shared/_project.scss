@@ -189,6 +189,40 @@ label[for="address-search"] {
   }
 }
 
+// Legend
+.legend {
+  margin-bottom: 2em;
+
+  .legend-title {
+  }
+
+  .legend-item {
+    font-size: 0.85em;
+    float: left;
+    margin: 0 1em 0.5em 0;
+    max-width: 50%;
+  }
+
+  .legend-swatch {
+    vertical-align: middle;
+    height: 1.5em;
+    width: 1.5em;
+    display: inline-block;
+    margin-right: 0.5em;
+    margin-bottom: 0.25em;
+  }
+
+  .legend-label {
+    vertical-align: middle;
+    display: inline-block;
+  }
+
+  .no-incidents {
+    background-color: #fcfcfc;
+    outline: 1px solid $color-text;
+  }
+}
+
 // Some overrides for MapboxGL
 .mapboxgl-map {
   @include font-styles("benton-sans");
