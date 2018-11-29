@@ -3,7 +3,8 @@
  */
 
 // Dependencis
-import { extend } from 'lodash';
+import { flatten } from 'lodash';
+import { colorSteps, colorScale } from './color-scale.js';
 import hexbins from '../../sources/hexbin-analysis.geo.json';
 
 // Main function
@@ -22,19 +23,13 @@ function responseTimeLayer(map) {
       '#FCFCFC',
       ['==', ['get', 'incidents'], null],
       '#FCFCFC',
-      [
-        'step',
-        ['get', 'median_response_time'],
-        '#f7feae',
-        300,
-        '#9bd8a4',
-        360,
-        '#46aea0',
-        420,
-        '#058092',
-        480,
-        '#045275'
-      ]
+      ['step', ['get', 'median_response_time']].concat([colorScale(0)]).concat(
+        flatten(
+          colorSteps.map(s => {
+            return [s, colorScale(s)];
+          })
+        )
+      )
     ],
     'fill-opacity': 1
     //'fill-outline-color': '#FFFFFF'

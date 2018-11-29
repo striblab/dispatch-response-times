@@ -34,11 +34,15 @@ function poiLayer(map) {
       'text-offset': [0, 0.6],
       'text-anchor': 'top',
       'text-size': 11
+    },
+    paint: {
+      'text-halo-color': 'rgba(255, 255, 255, 0.8)',
+      'text-halo-width': 1,
+      'text-halo-blur': 0.5
     }
   });
 
   // Mpls police stations
-  console.log(mplsPoliceStations);
   map.addSource('mplsPoliceStations', {
     type: 'geojson',
     data: mplsPoliceStations
@@ -64,6 +68,11 @@ function poiLayer(map) {
       'text-offset': [0, 0.6],
       'text-anchor': 'top',
       'text-size': 11
+    },
+    paint: {
+      'text-halo-color': 'rgba(255, 255, 255, 0.8)',
+      'text-halo-width': 1,
+      'text-halo-blur': 0.5
     }
   });
 }

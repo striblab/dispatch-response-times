@@ -105,9 +105,12 @@ footer {
 
   .no-incidents {
     font-style: italic;
+    margin-bottom: 2em;
   }
 
   .median-response {
+    margin-bottom: 1em;
+
     .median-response-value {
       font-size: 2em;
       display: block;
@@ -118,7 +121,17 @@ footer {
     height: 20em;
 
     .histogram-bar {
-      fill: red;
+      fill: map-get($grays, "medium");
+    }
+
+    .median-line {
+      stroke: map-get($grays, "dark");
+      stroke-width: 1;
+    }
+
+    .median-label {
+      font-size: 0.75em;
+      dominant-baseline: hanging;
     }
   }
 }
