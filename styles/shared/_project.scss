@@ -68,21 +68,22 @@ footer {
   width: 100%;
   z-index: 0;
   display: none;
-  padding: 2.5em 1em 3em;
+  padding: 2.5em 1em 1em;
   border-top: 1px solid map-get($grays, "medium");
   border-right: none;
   background-color: map-get($grays, "lightest");
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 
   @include media-breakpoint-up("md") {
-    top: 0;
+    top: 1em;
     right: auto;
-    bottom: 0;
-    left: 0;
+    bottom: auto;
+    left: 1em;
     max-width: 50%;
-    width: 25%;
-    border-top: none;
-    border-right: 1px solid map-get($grays, "medium");
+    width: 35em;
+    border: 1px solid map-get($grays, "medium");
+    border-radius: 4px;
+    background-color: $color-white;
   }
 
   .popover-content {
@@ -110,6 +111,15 @@ footer {
 
   .median-response {
     margin-bottom: 1em;
+    width: 50%;
+    float: left;
+    padding-right: 3em;
+
+    @include media-breakpoint-up("md") {
+      width: 100%;
+      float: none;
+      padding-right: 0;
+    }
 
     .median-response-value {
       font-size: 2em;
@@ -118,7 +128,15 @@ footer {
   }
 
   .hex-histogram {
-    height: 20em;
+    height: 14em;
+    width: 50%;
+    float: left;
+
+    @include media-breakpoint-up("md") {
+      height: 20em;
+      width: 100%;
+      float: none;
+    }
 
     .histogram-bar {
       fill: map-get($grays, "medium");
@@ -194,6 +212,7 @@ label[for="address-search"] {
   margin-bottom: 2em;
 
   .legend-title {
+    margin-bottom: 0.5em;
   }
 
   .legend-item {
@@ -229,6 +248,11 @@ label[for="address-search"] {
 }
 
 .mapboxgl-ctrl-top-right {
+  .mapboxgl-ctrl-group {
+    display: inline-block;
+    float: none;
+  }
+
   .mapboxgl-ctrl button,
   .mapboxgl-ctrl-group button {
     border-radius: 0;

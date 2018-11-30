@@ -1,10 +1,10 @@
 <div class="legend cf">
   <div class="legend-title">Median response time</div>
 
-  {#each fullColorSteps as step}
+  {#each fullColorSteps as step, si}
     <div class="legend-item">
       <div class="legend-swatch" style="background-color: { colorScale(step) };"></div>
-      <div class="legend-label">{ toMinutes(step, '+') }</div>
+      <div class="legend-label">{ si === 0 ? `<${toMinutes(fullColorSteps[si + 1])}` : toMinutes(step, '+') }</div>
     </div>
   {/each}
 

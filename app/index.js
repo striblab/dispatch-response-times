@@ -18,6 +18,13 @@ utils.environmentNoting();
 // Mapbox access token
 mapboxgl.accessToken = mapConfig.accessToken;
 
+// Some points and area
+const twinCitiesBounds = [
+  [-93.3487129795, 44.8787481227],
+  [-92.9895973789, 45.0618881395]
+];
+const twinCitiesCenter = [-93.191872, 44.960911];
+
 // Geocoding event issue
 // See: https://github.com/mapbox/mapbox-gl-geocoder/issues/99
 let lastGeocode;
@@ -27,17 +34,30 @@ const map = new mapboxgl.Map({
   container: 'explorable-map',
   style: mapConfig.style,
   attributionControl: false,
-  scrollZoom: false
+  scrollZoom: false,
+  minZoom: 10,
+  maxZoom: 15,
+  center: twinCitiesCenter,
+  zoom: 11
 });
 
 // Center
-map.fitBounds([
-  [-93.3487129795, 44.8787481227],
-  [-92.9895973789, 45.0618881395]
-]);
+map.fitBounds(twinCitiesBounds);
 
 // Add controls
 map.addControl(new mapboxgl.NavigationControl());
+
+// Allow scroll zoom on full screen
+let fullscreenControl = new mapboxgl.FullscreenControl();
+map.addControl(fullscreenControl);
+window.document.addEventListener(fullscreenControl._fullscreenchange, () => {
+  if (fullscreenControl._fullscreen) {
+    map.scrollZoom.enable();
+  }
+  else {
+    map.scrollZoom.disable();
+  }
+});
 
 // Geocoder container
 let $geocoderContainer = $('.address-search');
@@ -46,7 +66,13 @@ let $geocoderContainer = $('.address-search');
 let geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
   country: 'us',
-  bbox: [-93.351288, 44.874126, -93.16143, 45.060676]
+  bbox: [
+    twinCitiesBounds[0][0],
+    twinCitiesBounds[0][1],
+    twinCitiesBounds[1][0],
+    twinCitiesBounds[1][1]
+  ],
+  flyTo: false
 });
 $geocoderContainer.append(geocoder.onAdd(map));
 
@@ -60,27 +86,26 @@ map.on('load', () => {
   // Add pois (fire/police stations)
   poiLayer(map);
 
-  // Create popover
-  let popover = new Popover({ map });
-  map.on('click', responseTimeLayerId, e => {
-    if (!e) {
-      map.setFilter(responseTimeLayerHighlightId, ['==', 'hex_id', '']);
-      popover.close();
-      return;
-    }
+  // Close popover and unhighligh
+  let closePopover = () => {
+    map.setFilter(responseTimeLayerHighlightId, ['==', 'hex_id', '']);
+    popover.close();
+  };
 
+  // Open popover
+  let openPopover = point => {
     // Unsure why, but click doesn't already try to find features
-    var bbox = [[e.point.x - 1, e.point.y - 1], [e.point.x + 1, e.point.y + 1]];
-    var features = map.queryRenderedFeatures(bbox, {
+    let features = map.queryRenderedFeatures([point.x, point.y], {
       layers: [responseTimeLayerId]
     });
 
+    // Unhilight and close
     if (!features || !features.length) {
-      map.setFilter(responseTimeLayerHighlightId, ['==', 'hex_id', '']);
-      popover.close();
+      closePopover();
       return;
     }
 
+    // Highlight and open
     map.setFilter(responseTimeLayerHighlightId, [
       '==',
       'hex_id',
@@ -88,6 +113,19 @@ map.on('load', () => {
     ]);
     popover.open(features[0]);
     popover.drawHistogram(features[0]);
+    return true;
+  };
+
+  // Create popover
+  let popover = new Popover({ map });
+  map.on('click', responseTimeLayerId, e => {
+    if (!e || !e.point) {
+      map.setFilter(responseTimeLayerHighlightId, ['==', 'hex_id', '']);
+      popover.close();
+      return;
+    }
+
+    openPopover(e.point);
   });
 
   // Mouseover events
@@ -100,28 +138,34 @@ map.on('load', () => {
 
   // Handle geocoder results
   geocoder.on('result', ({ result }) => {
-    // Don't do anything if same geocode
-    if (result.center.toString() === lastGeocode) {
-      return;
-    }
+    closePopover();
 
-    // TODO: This doesn't seem to work.  It doesn't work on
-    // first geocode, then gets wrong point on next one.
-    //
-    // // See if we have data
-    // let features = map.queryRenderedFeatures(result.geometry.coordinates, {
-    //   layers: [mapConfig.dataLayer]
-    // });
-    // console.log(features);
-    // if (features && features.length) {
-    //   popover.open({ features });
-    // }
-    // else {
-    //   popover.close();
-    // }
-    popover.close();
+    // queryRenderedFeatures only looks at current view port so we have to do
+    // some stupid ness
+    map.flyTo(
+      {
+        center: result.center,
+        zoom: 13
+      },
+      {
+        source: 'geocode-hack'
+      }
+    );
+    map.once('moveend', e => {
+      if (!e || !e.source === 'geocode-hack') {
+        return;
+      }
 
-    // Mark last geocode
-    lastGeocode = result.center.toString();
+      // Don't do anything if same geocode
+      // if (result.center.toString() === lastGeocode) {
+      //   return;
+      // }
+
+      // Open popover
+      openPopover(map.project(result.center));
+
+      // Mark last geocode
+      lastGeocode = result.center.toString();
+    });
   });
 });
