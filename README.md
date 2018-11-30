@@ -5,7 +5,7 @@ A look at dispatch/911 response time in the Twin Cities.
 ## Data sources and analysis
 
 - Dispatch data analysis from [dispatch-analysis](https://github.com/striblab/dispatch-analysis).
-  - Example: `cp ../dispatch-analysis/data/build/hexbin-analysis.geo.json ./sources/hexbin-analysis.geo.json`
+  - Example: `geo2topo ../dispatch-analysis/data/build/hexbin-analysis.geo.json > ./sources/hexbin-analysis.topo.json`
 - [Minneapolis fire stations](http://opendata.minneapolismn.gov/datasets/fire-stations)
   - `mkdir -p data/sources && wget -O data/sources/mpls-fire-stations.zip "https://opendata.arcgis.com/datasets/e697e12884fd4421abaf4a71b513f509_0.zip" && unzip data/sources/mpls-fire-stations.zip -d data/sources/mpls-fire-stations && ogr2ogr -f GeoJSON sources/mpls-fire-stations.geo.json data/sources/mpls-fire-stations/MFD_FireStations.shp -t_srs "EPSG:4326"`
 - [Minneapolis police stations](http://opendata.minneapolismn.gov/datasets/police-stations)

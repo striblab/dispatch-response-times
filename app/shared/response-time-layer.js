@@ -2,10 +2,18 @@
  * Add response time layer
  */
 
+/* global topojson */
+
 // Dependencis
 import { flatten } from 'lodash';
 import { colorSteps, colorScale } from './color-scale.js';
-import hexbins from '../../sources/hexbin-analysis.geo.json';
+import hexbinsTopo from '../../sources/hexbin-analysis.topo.json';
+
+// Convert hexbins
+const hexbins = topojson.feature(
+  hexbinsTopo,
+  hexbinsTopo.objects['hexbin-analysis.geo']
+);
 
 // Main function
 function responseTimeLayer(map) {
@@ -64,7 +72,7 @@ function responseTimeLayer(map) {
       paint: styles
       //"filter": ["==", "$type", "Polygon"]
     },
-    firstSymbolId
+    'road-primary'
   );
 
   // Add highlight layer
@@ -95,6 +103,7 @@ function responseTimeLayer(map) {
       map.moveLayer('responseTimes', firstLineId);
     }
   });
+  map.fire('zoomend');
 
   // Make lines a bit see-through
   for (let i = 0; i < layers.length; i++) {
