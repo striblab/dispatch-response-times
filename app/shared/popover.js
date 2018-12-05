@@ -124,7 +124,7 @@ class Popover {
     let yScale = d3
       .scaleLinear()
       .range([height, 0])
-      .domain([0, Math.ceil(d3.max(data, d => d.value) * 1.1)]);
+      .domain([0, Math.max(10, Math.ceil(d3.max(data, d => d.value) * 1.1))]);
 
     // Container
     let svg = d3

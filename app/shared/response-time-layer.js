@@ -7,20 +7,28 @@
 // Dependencis
 import { flatten } from 'lodash';
 import { colorSteps, colorScale } from './color-scale.js';
-import hexbinsTopo from '../../sources/hexbin-analysis.topo.json';
+import policeTopo from '../../sources/hexbin-analysis-police.topo.json';
+import fireTopo from '../../sources/hexbin-analysis-fire.topo.json';
+
+console.log(policeTopo);
 
 // Convert hexbins
-const hexbins = topojson.feature(
-  hexbinsTopo,
-  hexbinsTopo.objects['hexbin-analysis.geo']
-);
+const hexbins = {
+  police: topojson.feature(
+    policeTopo,
+    policeTopo.objects['hexbin-analysis-police.geo']
+  ),
+  fire: topojson.feature(fireTopo, fireTopo.objects['hexbin-analysis-fire.geo'])
+};
 
 // Main function
-function responseTimeLayer(map) {
+function responseTimeLayer(map, responseData) {
+  console.log(policeTopo);
+  console.log(hexbins[responseData]);
   // Mpls fire stations
   map.addSource('responseTimes', {
     type: 'geojson',
-    data: hexbins
+    data: hexbins[responseData]
   });
 
   let styles = {

@@ -8,7 +8,7 @@ import mplsFireStations from '../../sources/mpls-fire-stations.geo.json';
 import mplsPoliceStations from '../../sources/mpls-police-stations.geo.json';
 
 // Main function
-function poiLayer(map) {
+function poiLayer(map, responseData) {
   let layers = map.getStyle().layers;
   let firstSymbolId;
   for (let i = 0; i < layers.length; i++) {
@@ -41,54 +41,58 @@ function poiLayer(map) {
   };
 
   // Mpls fire stations
-  map.addSource('mplsFireStations', {
-    type: 'geojson',
-    data: mplsFireStations
-  });
-  map.addLayer(
-    {
-      id: 'mplsFireStations',
-      type: 'circle',
+  if (!responseData || responseData === 'fire') {
+    map.addSource('mplsFireStations', {
+      type: 'geojson',
+      data: mplsFireStations
+    });
+    map.addLayer(
+      {
+        id: 'mplsFireStations',
+        type: 'circle',
+        source: 'mplsFireStations',
+        paint: circlePaint
+      },
+      firstSymbolId
+    );
+    map.addLayer({
+      id: 'mplsFireStationsLabel',
+      type: 'symbol',
       source: 'mplsFireStations',
-      paint: circlePaint
-    },
-    firstSymbolId
-  );
-  map.addLayer({
-    id: 'mplsFireStationsLabel',
-    type: 'symbol',
-    source: 'mplsFireStations',
-    minzoom: symbolTextMinZoom,
-    layout: extend(symbolLayout, {
-      'text-field': 'Mpls Fire {STATION_NU}'
-    }),
-    paint: symbolPaint
-  });
+      minzoom: symbolTextMinZoom,
+      layout: extend(symbolLayout, {
+        'text-field': 'Mpls Fire {STATION_NU}'
+      }),
+      paint: symbolPaint
+    });
+  }
 
   // Mpls police stations
-  map.addSource('mplsPoliceStations', {
-    type: 'geojson',
-    data: mplsPoliceStations
-  });
-  map.addLayer(
-    {
-      id: 'mplsPoliceStations',
-      type: 'circle',
+  if (!responseData || responseData === 'police') {
+    map.addSource('mplsPoliceStations', {
+      type: 'geojson',
+      data: mplsPoliceStations
+    });
+    map.addLayer(
+      {
+        id: 'mplsPoliceStations',
+        type: 'circle',
+        source: 'mplsPoliceStations',
+        paint: circlePaint
+      },
+      firstSymbolId
+    );
+    map.addLayer({
+      id: 'mplsPoliceStationsLabel',
+      type: 'symbol',
       source: 'mplsPoliceStations',
-      paint: circlePaint
-    },
-    firstSymbolId
-  );
-  map.addLayer({
-    id: 'mplsPoliceStationsLabel',
-    type: 'symbol',
-    source: 'mplsPoliceStations',
-    minzoom: symbolTextMinZoom,
-    layout: extend(symbolLayout, {
-      'text-field': 'Mpls Police {BUILDING_N}'
-    }),
-    paint: symbolPaint
-  });
+      minzoom: symbolTextMinZoom,
+      layout: extend(symbolLayout, {
+        'text-field': 'Mpls Police {BUILDING_N}'
+      }),
+      paint: symbolPaint
+    });
+  }
 }
 
 export default poiLayer;

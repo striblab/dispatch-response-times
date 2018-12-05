@@ -62,6 +62,10 @@ module.exports = {
     ~['development', 'production', 'none'].indexOf(process.env.NODE_ENV) ||
     'production',
   devtool: 'source-map',
+  performance: {
+    maxAssetSize: 1250000,
+    maxEntrypointSize: 1250000
+  },
   // Needs a key so that [name] can be used in output.
   entry: _.mapKeys(glob.sync('./app/*.js'), v => {
     return path.basename(v, '.js');

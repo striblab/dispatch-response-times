@@ -2,9 +2,9 @@
 <div class="strib-styles ssa ssb ssc">
   <section class="">
     <div class="hero container-lg">
-      <h1>911 response times in the Twin Cities</h1>
+      <h1>DRAFT: 911 response times</h1>
 
-      <p class="lead container-md">How fast can they get there.</p>
+      <p class="lead container-md">Not to be shared.</p>
 
       <div class="byline">
         <address>By
@@ -15,7 +15,7 @@
         <span class="spacer"></span>
         Star Tribune
         <span class="spacer-alt"></span>
-        <time pubdate datetime="2018-10-14T16:00:00">October 14, 2018</time>
+        <time pubdate datetime="2018-10-14T16:00:00">--</time>
       </div>
 
       <div class="share-placeholder">
@@ -24,9 +24,7 @@
     </div>
 
     <div class="container-copy bottom-space">
-      <p>Minneapolis planners have proposed upzoning the city to allow for triplexes in all neighborhoods, even those now reserved for single-family homes, and four-to-six story buildings along some transit corridors. The plan offers guidance on how to keep Minneapolis affordable, environmentally friendly and racially equitable as the population grows over the next two decades.</p>
-
-      <p>Since its release this spring, it has sparked a vigorous debate on whether the proposed changes will adequately accomplish this ambitious vision for the future, or if such rapid change all at once will invite developers to destroy the city’s characters in the name of profitable multi-unit housing. As the City Council prepares to hear public testimony on the proposal, the searchable map below allows you to explore what might change. </p>
+      <p>TK: Praesent dapibus eros mi, eget mattis felis pharetra in. Ut lobortis arcu suscipit volutpat dapibus. Vivamus nec pretium augue. Vestibulum quis auctor neque. Vivamus rhoncus, metus ut varius consectetur, quam quam sollicitudin sapien, ac ornare dolor sem mattis orci. Morbi finibus imperdiet orci nec vehicula. Aenean a risus velit. Aenean ultrices lacus et aliquet auctor. Maecenas dictum porta bibendum. Curabitur vel dignissim massa. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
     </div>
 
     <div class="container-copy bottom-space">
@@ -35,17 +33,53 @@
     </div>
 
     <div class="container-copy bottom-space">
-      <Legend />
+      <Legend title="Median response time for police departments" />
     </div>
 
     <div class="container-xxl">
       <figure class="map-figure">
-        <div class="map-highlight" id="explorable-map"></div>
+        <div class="map-highlight" id="police-explorable-map"></div>
 
         <figcaption>
-          <p>The map above shows the median response times for high priorty 911 calls for the police and fire departments in Minneapolis and St. Paul.</p>
+          <p>The map above shows the median response times for high priorty 911 calls for the police in specific cities in the Twin Cities.</p>
         </figcaption>
       </figure>
+    </div>
+
+    <div class="container-copy bottom-space">
+      <p>TK: Praesent dapibus eros mi, eget mattis felis pharetra in. Ut lobortis arcu suscipit volutpat dapibus. Vivamus nec pretium augue. Vestibulum quis auctor neque. Vivamus rhoncus, metus ut varius consectetur, quam quam sollicitudin sapien, ac ornare dolor sem mattis orci. Morbi finibus imperdiet orci nec vehicula. Aenean a risus velit. Aenean ultrices lacus et aliquet auctor. Maecenas dictum porta bibendum. Curabitur vel dignissim massa. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+    </div>
+
+    <div class="container-copy bottom-space">
+      <Legend title="Median response time for fire departments" />
+    </div>
+
+    <div class="container-xxl">
+      <figure class="map-figure">
+        <div class="map-highlight" id="fire-explorable-map"></div>
+
+        <figcaption>
+          <p>The map above shows the median response times for high priorty 911 calls for the fire department in specific cities in the Twin Cities.</p>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="container-copy">
+      <footer class="article-footer">
+        <h1>Credits</h1>
+
+        <ul class="credits">
+          <li>Edited by James Schiffer</li>
+          <li>Data analysis by Eric Roper and Alan Palazzolo</li>
+          <li>Design and development by Alan Palazzolo</li>
+        </ul>
+
+        <h1>Methodology</h1>
+
+        <p>Dispatch data provided by each relevant dispatch organization.</p>
+
+        <p>The Star Tribune analyzed dispatch data that provided relevant priority fields.  High priority is overall defined as Priority 1 or more (though in St. Paul, this was Priority 2 and more).  Response data was calculated as the time between First Keystroke (or Call Pickup, if keystroke data was not provided) to First Unit Arrived.  The analysis excluded any data that was marked as officer-initiated or the time data suggested that the incident was officer-initiated, as well as any data that did not have the necessary time data to caluclate response time.  </p>
+      </footer>
     </div>
   </section>
 </div>
