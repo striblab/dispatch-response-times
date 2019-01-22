@@ -60,6 +60,37 @@ class Popover {
       </div>
 
       <div class="hex-histogram"></div>
+
+      <div class="median-times">
+        <hr>
+        Median call time: ${
+  feature.properties.median_call_time
+    ? Math.round((feature.properties.median_call_time / 60) * 10) / 10 +
+              ' minutes'
+    : '-'
+}<br>
+        Median drive time: ${
+  feature.properties.median_drive_time
+    ? Math.round((feature.properties.median_drive_time / 60) * 10) /
+                10 +
+              ' minutes'
+    : '-'
+}<br>
+        Median to-queue time: ${
+  feature.properties.median_to_queue_time
+    ? Math.round((feature.properties.median_to_queue_time / 60) * 10) /
+                10 +
+              ' minutes'
+    : '-'
+}<br>
+        Median in-queue time: ${
+  feature.properties.median_in_queue_time
+    ? Math.round((feature.properties.median_in_queue_time / 60) * 10) /
+                10 +
+              ' minutes'
+    : '-'
+}<br>
+      </div>
     `;
 
     return output;

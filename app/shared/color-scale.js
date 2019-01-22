@@ -9,7 +9,7 @@ if (global && !global.d3 && typeof require !== 'undefined') {
 }
 
 // Steps
-let colorSteps = [60 * 6, 60 * 7, 60 * 8, 60 * 9, 60 * 10];
+let colorSteps = [60 * 6, 60 * 7.5, 60 * 9, 60 * 10.5, 60 * 12];
 
 // Scale
 let colorScale = d3
