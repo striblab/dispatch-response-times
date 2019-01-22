@@ -48,14 +48,16 @@ class Popover {
         '<div class="no-incidents">There were less than 10 incidents in 2017 for this area.</div>';
     }
 
+    let p = feature.properties;
+
     output += `
       <div class="median-response">
         <span class="median-response-value">
-          ${this.secondsToMinutes(feature.properties.median_response_time)}
+          ${this.secondsToMinutes(p.median_response_time)}
         </span>
 
         <span class="median-response-label">
-          Median response time for <strong>${feature.properties.incidents.toLocaleString()}</strong> high priority incidents in 2017.
+          Median response time for <strong>${p.incidents.toLocaleString()}</strong> high priority incidents in 2017.
         </span>
       </div>
 
@@ -64,32 +66,37 @@ class Popover {
       <div class="median-times">
         <hr>
         Median call time: ${
-  feature.properties.median_call_time
-    ? Math.round((feature.properties.median_call_time / 60) * 10) / 10 +
-              ' minutes'
+  p.median_call_time
+    ? Math.round((p.median_call_time / 60) * 10) / 10 + ' minutes'
     : '-'
 }<br>
         Median drive time: ${
-  feature.properties.median_drive_time
-    ? Math.round((feature.properties.median_drive_time / 60) * 10) /
-                10 +
-              ' minutes'
+  p.median_drive_time
+    ? Math.round((p.median_drive_time / 60) * 10) / 10 + ' minutes'
     : '-'
 }<br>
         Median to-queue time: ${
-  feature.properties.median_to_queue_time
-    ? Math.round((feature.properties.median_to_queue_time / 60) * 10) /
-                10 +
-              ' minutes'
+  p.median_to_queue_time
+    ? Math.round((p.median_to_queue_time / 60) * 10) / 10 + ' minutes'
     : '-'
 }<br>
         Median in-queue time: ${
-  feature.properties.median_in_queue_time
-    ? Math.round((feature.properties.median_in_queue_time / 60) * 10) /
-                10 +
-              ' minutes'
+  p.median_in_queue_time
+    ? Math.round((p.median_in_queue_time / 60) * 10) / 10 + ' minutes'
     : '-'
 }<br>
+      </div>
+
+      <div class="frequent-incident">
+        <hr>
+        Most frequent incident: ${
+  p.most_frequent_incident ? p.most_frequent_incident : '-'
+}<br>
+        Incident frequency: ${
+  p.most_frequent_incident_count
+    ? p.most_frequent_incident_count.toLocaleString()
+    : '-'
+}
       </div>
     `;
 
