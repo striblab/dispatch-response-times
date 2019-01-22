@@ -66,22 +66,22 @@ class Popover {
       <div class="median-times">
         <hr>
         Median call time: ${
-  p.median_call_time
+  p.median_call_time && !isNaN(p.median_call_time)
     ? Math.round((p.median_call_time / 60) * 10) / 10 + ' minutes'
     : '-'
 }<br>
         Median drive time: ${
-  p.median_drive_time
+  p.median_drive_time && !isNaN(p.median_drive_time)
     ? Math.round((p.median_drive_time / 60) * 10) / 10 + ' minutes'
     : '-'
 }<br>
         Median to-queue time: ${
-  p.median_to_queue_time
+  p.median_to_queue_time && !isNaN(p.median_to_queue_time)
     ? Math.round((p.median_to_queue_time / 60) * 10) / 10 + ' minutes'
     : '-'
 }<br>
         Median in-queue time: ${
-  p.median_in_queue_time
+  p.median_in_queue_time && !isNaN(p.median_in_queue_time)
     ? Math.round((p.median_in_queue_time / 60) * 10) / 10 + ' minutes'
     : '-'
 }<br>
