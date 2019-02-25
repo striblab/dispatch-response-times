@@ -12,6 +12,7 @@ A look at dispatch/911 response time in the Twin Cities.
   - `mkdir -p data/sources && wget -O data/sources/mpls-fire-stations.zip "https://opendata.arcgis.com/datasets/e697e12884fd4421abaf4a71b513f509_0.zip" && unzip data/sources/mpls-fire-stations.zip -d data/sources/mpls-fire-stations && ogr2ogr -f GeoJSON sources/mpls-fire-stations.geo.json data/sources/mpls-fire-stations/MFD_FireStations.shp -t_srs "EPSG:4326"`
 - [Minneapolis police stations](http://opendata.minneapolismn.gov/datasets/police-stations)
   - `mkdir -p data/sources && wget -O data/sources/mpls-police-stations.zip "https://opendata.arcgis.com/datasets/cb05984116c146cfa6ee35d32f664bd7_0.zip" && unzip data/sources/mpls-police-stations.zip -d data/sources/mpls-police-stations && ogr2ogr -f GeoJSON sources/mpls-police-stations.geo.json data/sources/mpls-police-stations/Police_Stations.shp -t_srs "EPSG:4326"`
+- St. Paul police stations manually compiled from the [SPPD website](https://www.stpaul.gov/departments/police/administration-office-chief/operations-division/patrol-districts), specifically [this map](https://www.stpaul.gov/DocumentCenter/Government/Police/Connect%20with%20the%20Department/Map%20to%20SPPD/2011-10-11Citymap.PDF).
 
 ## Publishing
 

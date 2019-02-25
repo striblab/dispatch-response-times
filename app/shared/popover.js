@@ -43,9 +43,9 @@ class Popover {
       return '<div class="no-incidents">There were no incidents in this area in 2017.</div>';
     }
 
-    if (feature.properties.incidents < 10) {
+    if (feature.properties.incidents < 20) {
       output +=
-        '<div class="no-incidents">There were less than 10 incidents in 2017 for this area.</div>';
+        '<div class="no-incidents">There were less than 20 incidents in 2017 for this area.</div>';
     }
 
     let p = feature.properties;

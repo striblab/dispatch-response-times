@@ -9,8 +9,18 @@
   {/each}
 
   <div class="legend-item">
-    <div class="legend-swatch no-incidents"></div>
-    <div class="legend-label">Less than 10 incidents</div>
+    <div class="legend-swatch no-incidents">
+      <div class="no-incidents-pattern"></div>
+    </div>
+
+    <div class="legend-label">Less than 20 incidents</div>
+  </div>
+
+  <div class="legend-item">
+    <div class="legend-swatch no-incidents">
+    </div>
+
+    <div class="legend-label">No incidents</div>
   </div>
 </div>
 
@@ -21,16 +31,16 @@
     helpers: {
       toMinutes(seconds, suffix = "") {
         return `${Math.floor(seconds / 60)} m
-            ${
-              seconds % 60
-                ? " " +
-                  Math.round(seconds % 60)
-                    .toString()
-                    .padStart(2, "0") +
-                  " s"
-                : ""
-            }
-              ${suffix}`;
+                  ${
+                    seconds % 60
+                      ? " " +
+                        Math.round(seconds % 60)
+                          .toString()
+                          .padStart(2, "0") +
+                        " s"
+                      : ""
+                  }
+                    ${suffix}`;
       }
     },
 

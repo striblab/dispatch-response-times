@@ -7,9 +7,9 @@
 // Dependencies
 import utils from './shared/utils.js';
 import mapConfig from './shared/map-config.js';
-import Popover from './shared/popover.js';
-import responseTimeLayer from './shared/response-time-layer.js';
-import poiLayer from './shared/poi-layer.js';
+// import Popover from './shared/popover.js';
+// import responseTimeLayer from './shared/response-time-layer.js';
+// import poiLayer from './shared/poi-layer.js';
 
 import drawMap from './shared/draw-map.js';
 
@@ -36,9 +36,9 @@ drawMap({
 });
 
 // Draw fire map
-drawMap({
-  element: 'fire-explorable-map',
-  responseData: 'fire',
-  twinCitiesBounds,
-  twinCitiesCenter
-});
+// drawMap({
+//   element: 'fire-explorable-map',
+//   responseData: 'fire',
+//   twinCitiesBounds,
+//   twinCitiesCenter
+// });

@@ -6,6 +6,7 @@
 import { extend } from 'lodash';
 import mplsFireStations from '../../sources/mpls-fire-stations.geo.json';
 import mplsPoliceStations from '../../sources/mpls-police-stations.geo.json';
+import spPoliceStations from '../../sources/sp-police-stations.geo.json';
 
 // Main function
 function poiLayer(map, responseData) {
@@ -89,6 +90,31 @@ function poiLayer(map, responseData) {
       minzoom: symbolTextMinZoom,
       layout: extend(symbolLayout, {
         'text-field': 'Mpls Police {BUILDING_N}'
+      }),
+      paint: symbolPaint
+    });
+
+    // SPPD
+    map.addSource('spPoliceStations', {
+      type: 'geojson',
+      data: spPoliceStations
+    });
+    map.addLayer(
+      {
+        id: 'spPoliceStations',
+        type: 'circle',
+        source: 'spPoliceStations',
+        paint: circlePaint
+      },
+      firstSymbolId
+    );
+    map.addLayer({
+      id: 'spPoliceStationsLabel',
+      type: 'symbol',
+      source: 'spPoliceStations',
+      minzoom: symbolTextMinZoom,
+      layout: extend(symbolLayout, {
+        'text-field': 'St. Paul Police {name}'
       }),
       paint: symbolPaint
     });
