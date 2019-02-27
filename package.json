@@ -78,6 +78,7 @@
     "svelte-extras": "^2.0.2",
     "svelte-loader": "^2.10.0",
     "svelte-transitions-fade": "^1.0.0",
+    "topojson-server": "^3.0.0",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "underscore": "^1.8.3",
     "webpack": "^4.16.4",
