@@ -1,0 +1,135 @@
+<div class="chart-figure">
+  {#if title}
+    <div class="label { noLabel ? 'sr-only' : '' }">{ title }</div>
+  {/if}
+
+  <figure aria-labelledby="label-{ id }">
+    <div class="chart chart-histogram" ref:chart role="img" title="{ title }"
+      bind:clientWidth="containerWidth" bind:clientHeight="containerHeight">
+      <svg
+        viewbox="0 0 { containerWidth || defaultWidth } { containerHeight || defaultHeight }"
+        width="{ containerWidth || defaultWidth }"
+        height="{ containerHeight || defaultHeight }"
+        preserveaspectratio="xMidYMid meet">
+        <g class="chart-area" transform="translate({ padding.left }, { padding.top })">
+          <AxisX {...state} />
+          <AxisY {...state} />
+
+          {#if annotationLines}
+            <AnnotationLines {...state}/>
+          {/if}
+
+          {#if type === 'histogram'}
+            <HistogramBars {...state} />
+          {:elseif type === "line"}
+            <Line {...state} />
+          {:elseif type === "step-line"}
+            <StepLine {...state} />
+          {/if}
+        </g>
+      </svg>
+    </div>
+
+    <figcaption class="figcaption-bottom { noCaption ? 'sr-only' : '' }">
+      <slot></slot>
+    </figcaption>
+  </figure>
+</div>
+
+
+<script>
+  import { isNaN } from "lodash";
+  import { scaleLinear } from "d3-scale";
+  import AxisX from "./_axis-x.svelte.html";
+  import AxisY from "./_axis-y.svelte.html";
+  import AnnotationLines from "./_annotation-lines.svelte.html";
+  import HistogramBars from "./_histogram-bars.svelte.html";
+  import Line from "./_line.svelte.html";
+  import StepLine from "./_step-line.svelte.html";
+
+  /* global d3, c3 */
+  export default {
+    components: {
+      AxisX,
+      AxisY,
+      AnnotationLines,
+      HistogramBars,
+      Line,
+      StepLine
+    },
+
+    oncreate() {
+      let { xMin, xMax, yMin, yMax, chartWidth, chartHeight } = this.get();
+
+      // this.set({
+      //   xScale: scaleLinear()
+      //     .domain([xMin, xMax])
+      //     .range([0, chartWidth]),
+      //   yScale: scaleLinear()
+      //     .domain([yMin, yMax])
+      //     .range([chartHeight, 0])
+      // });
+
+      console.log(this.get());
+    },
+
+    computed: {
+      state: state => state,
+
+      chartWidth({ containerWidth, padding, defaultWidth }) {
+        return containerWidth
+          ? containerWidth - padding.left - padding.right
+          : defaultWidth;
+      },
+
+      chartHeight({ containerHeight, padding, defaultHeight }) {
+        return containerHeight
+          ? containerHeight - padding.top - padding.bottom
+          : defaultHeight;
+      },
+
+      xScale({ scaleLinear, xMin, xMax, chartWidth }) {
+        return scaleLinear()
+          .domain([xMin, xMax])
+          .range([0, chartWidth]);
+      },
+
+      yScale({ scaleLinear, yMin, yMax, chartHeight }) {
+        return scaleLinear()
+          .domain([yMin, yMax])
+          .range([chartHeight, 0]);
+      },
+
+      xTicks({ xTickCount, xScale }) {
+        return xScale && xScale.ticks ? xScale.ticks(xTickCount) : undefined;
+      },
+
+      yTicks({ yTickCount, yScale }) {
+        return yScale && yScale.ticks ? yScale.ticks(yTickCount) : undefined;
+      }
+    },
+
+    data() {
+      return {
+        defaultWidth: 400,
+        defaultHeight: 200,
+        padding: { top: 0, right: 20, bottom: 25, left: 10 },
+        xMin: 0,
+        xMax: 1,
+        yMin: 0,
+        yMax: 100,
+        xTickCount: 10,
+        yTickCount: 10,
+        xBaseline: true,
+        xTickFormat: (t, i, len) =>
+          `${Math.round(t * 100)}${i === len - 1 ? "%" : ""}`,
+        yTickFormat: (t, i, len) => `${t ? t.toLocaleString() : ""}`,
+        xScale: i => i,
+        yScale: i => i,
+        scaleLinear
+      };
+    }
+  };
+</script>
+
+

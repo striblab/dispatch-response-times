@@ -4,11 +4,9 @@
  * http://sass-lang.com/
  */
 
-
 // Include strib-icons
-$strib-fonts-location: '//static.startribune.com/assets/libs/strib-icons/0.0.10/';
-@import '@striblab/strib-icons/build/strib-icons.scss';
-
+$strib-fonts-location: "//static.startribune.com/assets/libs/strib-icons/0.0.10/";
+@import "@striblab/strib-icons/build/strib-icons.scss";
 
 // Environment noting
 @import "shared/_environment";
@@ -21,12 +19,12 @@ $strib-fonts-location: '//static.startribune.com/assets/libs/strib-icons/0.0.10/
 // that we don't affect other styles on the page.  Note that
 // this increases the CSS size, and it means strib-styles won't use
 // rems when it would otherwise.
-$selector-wrapper: '.strib-styles.ssa.ssb.ssc';
-@import '@striblab/strib-styles/source/styles/default-wrapper.scss';
+$selector-wrapper: ".strib-styles.ssa.ssb.ssc";
+@import "@striblab/strib-styles/source/styles/default-wrapper.scss";
 
 // Project specific styles.  Split styles into files per component
 #{$selector-wrapper} {
   // Split your styles into multiple files so its easier to understand and change
-  @import 'shared/_project';
+  @import "shared/_charts";
+  @import "shared/_project";
 }
-

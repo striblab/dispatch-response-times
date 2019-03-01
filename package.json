@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "d3": "^5.7.0",
+    "d3-scale": "^2.2.2",
     "lodash": "^4.17.5",
     "query-string": "^4.3.2",
     "topojson": "^3.0.2",

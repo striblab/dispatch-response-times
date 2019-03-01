@@ -1,0 +1,21 @@
+
+<g class="axis x-axis">
+  {#if xTicks}
+    {#each xTicks as tick, i}
+      <g class="tick tick-{ i }" transform="translate({ xScale(tick) }, { yScale.range()[0] })">
+        <line class="grid-line" y1="{ chartHeight * -1 }" y2="0" x1="0" x2="0"></line>
+        <text y="5" text-anchor="middle">{ xTickFormat ? xTickFormat(tick, i, xTicks.length) : tick }</text>
+      </g>
+    {/each}
+  {/if}
+
+  {#if xBaseline}
+    <line class="baseline" y1="{ chartHeight + 0.5 }" y2="{ chartHeight + 0.5}" x1="0" x2="{ chartWidth }"></line>
+  {/if}
+</g>
+
+<script>
+  export default {
+    namespace: "svg"
+  };
+</script>

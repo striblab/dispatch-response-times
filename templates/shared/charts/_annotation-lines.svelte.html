@@ -1,0 +1,14 @@
+
+{#each annotationLines as a, i}
+  <line class="annotation-line annotation-line-{ i }"
+    x1="{ xScale(a) }"
+    y1="{ 0 }"
+    x2="{ xScale(a) }"
+    y2="{ chartHeight }"></line>
+{/each}
+
+<script>
+  export default {
+    namespace: "svg"
+  };
+</script>

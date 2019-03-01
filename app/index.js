@@ -26,6 +26,16 @@ const twinCitiesBounds = [
 ];
 const twinCitiesCenter = [-93.191872, 44.960911];
 
+// Reload components
+import Content from '../templates/_index-content.svelte.html';
+
+// Main component
+const app = new Content({
+  target: document.querySelector('.article-lcd-body-content'),
+  hydrate: true,
+  data: {}
+});
+
 // Draw police map
 drawMap({
   element: 'police-explorable-map',

@@ -1,0 +1,37 @@
+{#if path}
+  <path class="path-line" d="{ path }"></path>
+{/if}
+
+<script>
+  export default {
+    namespace: "svg",
+    computed: {
+      path: ({ data, xScale, yScale }) => {
+        if (!data || !data) {
+          return;
+        }
+
+        let points = [];
+        data.forEach((d, i) => {
+          let x = xScale(d.x === undefined ? d[0] : d.x);
+          let y = yScale(d.y === undefined ? d[1] : d.y);
+          let hasNext = data[i + 1] !== undefined;
+          let nextX = hasNext
+            ? xScale(data[i + 1].x === undefined ? data[i + 1][0] : data[i + 1].x)
+            : undefined;
+          let nextY = hasNext
+            ? yScale(data[i + 1].y === undefined ? data[i + 1][1] : data[i + 1].y)
+            : undefined;
+
+          points.push(`${x},${y}`);
+          if (hasNext) {
+            points.push(`${nextX},${y}`);
+          }
+        });
+
+        return `M${points.join("L")}`;
+      }
+    }
+  };
+</script>
+

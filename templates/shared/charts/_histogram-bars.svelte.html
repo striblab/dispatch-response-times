@@ -1,0 +1,21 @@
+
+<g class="histogram-bars">
+  {#each data as d, i}
+    {#if d.count}
+      <rect class="histogram-bar"
+        x="{ xScale(d.min) }"
+        y="{ Math.min(yScale(d.count), yScale(yMax * 0.01)) }"
+        width="{ xScale(d.max) - xScale(d.min) }"
+        height="{ chartHeight - (Math.min(yScale(d.count), yScale(yMax * 0.01))) }"
+      ></rect>
+    {/if}
+  {:else}
+    <!-- -->
+  {/each}
+</g>
+
+<script>
+  export default {
+    namespace: "svg"
+  };
+</script>

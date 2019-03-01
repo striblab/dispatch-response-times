@@ -1,0 +1,30 @@
+{#if path}
+  <path class="path-line" d="{ path }"></path>
+{/if}
+
+<script>
+  export default {
+    namespace: "svg",
+    computed: {
+      path: ({ data, xScale, yScale }) => {
+        if (!data || !data) {
+          return;
+        }
+
+        return (
+          "M" +
+          data
+            .map((d, i) => {
+              return (
+                xScale(d.x === undefined ? d[0] : d.x) +
+                "," +
+                yScale(d.y === undefined ? d[1] : d.y)
+              );
+            })
+            .join("L")
+        );
+      }
+    }
+  };
+</script>
+
