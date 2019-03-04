@@ -66,7 +66,7 @@ footer {
   left: 0;
   max-width: 100%;
   width: 100%;
-  z-index: 0;
+  z-index: 9999;
   display: none;
   padding: 2.5em 1em 1em;
   border-top: 1px solid map-get($grays, "medium");
@@ -93,6 +93,7 @@ footer {
   }
 
   &.active {
+    display: block;
   }
 
   .popover-close {
@@ -128,12 +129,10 @@ footer {
   }
 
   .hex-histogram {
-    height: 14em;
     width: 50%;
     float: left;
 
     @include media-breakpoint-up("md") {
-      height: 20em;
       width: 100%;
       float: none;
     }

@@ -1,0 +1,157 @@
+
+<div class="popover { popoverOpen ? 'active' : '' }">
+  <button type="button" class="button-link dark popover-close" on:click="closePopover(event)">x</button>
+  <div class="popover-content">
+    {#if !feature}
+      <em>Select feature</em>
+    {:elseif !feature || !feature.incidents}
+      <div class="no-incidents">There were no incidents in this area in 2017.</div>
+    {:elseif feature.incidents < incidientThreshold}
+      <div class="no-incidents">There were less than { incidientThreshold } incidents in 2017 for this area.</div>
+    {:else}
+      <div class="median-response">
+        <span class="median-response-value">
+          { secondsToMinutes(feature.median_response_time) }
+        </span>
+
+        <span class="median-response-label">
+          Median response time for <strong>{ feature.incidents.toLocaleString() }</strong> high priority incidents in 2017.
+        </span>
+      </div>
+
+      <div class="hex-histogram">
+        <Chart
+          id="hex-bin-popover-chart"
+          title="Response time histogram for this hex area"
+          noLabel="{ true }"
+          type="histogram"
+          padding="{{ top: 10, right: 20, bottom: 25, left: 30 }}"
+          data="{ histogramData }"
+          xMin="{ 0 }"
+          xMax="{ maxBy(histogramData, 'max').max }"
+          xTickFormat="{ (d) => d }"
+          yMin="{ 0 }"
+          yMax="{ Math.max(10, maxBy(histogramData, 'count').count) }"
+        ></Chart>
+      </div>
+
+      <div class="median-times">
+        <hr>
+        Median call time: {
+          feature.median_call_time && !isNaN(feature.median_call_time)
+            ? Math.round((feature.median_call_time / 60) * 10) / 10 + ' minutes'
+            : '-'
+        }
+        <br>
+
+        Median drive time: {
+          feature.median_drive_time && !isNaN(feature.median_drive_time)
+            ? Math.round((feature.median_drive_time / 60) * 10) / 10 + ' minutes'
+            : '-'
+        }
+        <br>
+
+        Median to-queue time: {
+          feature.median_to_queue_time && !isNaN(feature.median_to_queue_time)
+            ? Math.round((feature.median_to_queue_time / 60) * 10) / 10 + ' minutes'
+            : '-'
+        }
+        <br>
+
+        Median in-queue time: {
+          feature.median_in_queue_time && !isNaN(feature.median_in_queue_time)
+            ? Math.round((feature.median_in_queue_time / 60) * 10) / 10 + ' minutes'
+            : '-'
+        }
+        <br>
+      </div>
+
+      <div class="frequent-incident">
+        <hr>
+        Most frequent incident: {
+          feature.most_frequent_incident ? feature.most_frequent_incident : '-'
+        }
+        <br>
+
+        Incident frequency: {
+          feature.most_frequent_incident_count
+            ? feature.most_frequent_incident_count.toLocaleString()
+            : '-'
+        }
+      </div>
+    {/if}
+  </div>
+</div>
+
+<script>
+  import Chart from "../charts/_chart.svelte.html";
+  import { isNaN, forEach, sortBy, maxBy } from "lodash";
+
+  export default {
+    components: {
+      Chart
+    },
+
+    methods: {
+      closePopover(event) {
+        if (event && event.preventDefault) {
+          event.preventDefault();
+        }
+
+        this.set({ popoverOpen: false });
+      }
+    },
+
+    computed: {
+      histogramData({ feature }) {
+        console.log(feature);
+        if (!feature || !feature.incidents) {
+          return [];
+        }
+
+        // Get raw data from histo_ properties
+        let bins = [];
+        forEach(feature, (v, k) => {
+          let m = k.match(/^histo_([0-9]+)/i);
+          if (m) {
+            bins.push({ bin: parseInt(m[1], 10), count: v });
+          }
+        });
+
+        // Put into min max and
+        let interval;
+        console.log(bins);
+        console.log(
+          sortBy(bins, "bin").map((b, bi) => {
+            interval = bins[bi + 1] ? bins[bi + 1].bin - b.bin : interval;
+            return {
+              min: b.bin,
+              max: b.bin + interval,
+              count: b.count
+            };
+          })
+        );
+        return sortBy(bins, "bin").map((b, bi) => {
+          interval = bins[bi + 1] ? bins[bi + 1].bin - b.bin : interval;
+          return {
+            min: b.bin,
+            max: b.bin + interval,
+            count: b.count
+          };
+        });
+      }
+    },
+
+    helpers: {
+      isNaN,
+      maxBy,
+
+      secondsToMinutes(seconds) {
+        return (
+          `${Math.floor(seconds / 60) || 0} m` +
+          (seconds % 60 ? ` ${Math.round(seconds % 60)} s` : "")
+        );
+      }
+    }
+  };
+</script>

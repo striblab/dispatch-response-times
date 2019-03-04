@@ -1,0 +1,478 @@
+{#if geocoder}
+  <div class="container-copy bottom-space">
+    <label for="address-search">Search an address or place in Minneapolis</label>
+    <div class="address-search" id="address-search" ref:geocoderContainer></div>
+  </div>
+{/if}
+
+{#if legend}
+  <div class="container-copy bottom-space">
+    <div class="legend cf">
+      <div class="label legend-title">{ legendTitle }</div>
+
+      {#each fullColorSteps as step, si}
+        <div class="legend-item">
+          <div class="legend-swatch" style="background-color: { colorScale(step) };"></div>
+          <div class="legend-label">{
+            legendFormat ? legendFormat(step, si, fullColorSteps) : step
+          }</div>
+        </div>
+      {/each}
+
+      {#if extraLegendSteps}
+        {#each extraLegendSteps as step, si}
+          <div class="legend-item">
+            <div class="legend-swatch { step.class }">
+            </div>
+
+            <div class="legend-label">{ step.label }</div>
+          </div>
+        {/each}
+      {/if}
+    </div>
+  </div>
+{/if}
+
+<div class="container-xxl">
+  <figure class="map-figure">
+    <div class="map-highlight" id="{ id || '' }" ref:mapEl>
+      {#if popoverComponent}
+        <svelte:component this={ popoverComponent } feature="{ feature }" bind:popoverOpen="popoverOpen" />
+      {/if}
+    </div>
+
+    <figcaption>
+      { caption || '' }
+    </figcaption>
+  </figure>
+</div>
+
+<script>
+  import { scaleThreshold } from "d3-scale";
+  import { flatten, extend } from "lodash";
+
+  export default {
+    oncreate() {
+      // Put together map
+      this.drawMap();
+    },
+
+    methods: {
+      drawMap() {
+        this.__map = new mapboxgl.Map({
+          container: this.refs.mapEl,
+          style: this.get().mapStyleId,
+          attributionControl: false,
+          scrollZoom: false,
+          minZoom: this.get().minZoom,
+          maxZoom: this.get().maxZoom,
+          center: this.get().initialCenter,
+          zoom: this.get().initialZoom
+        });
+        let map = this.__map;
+
+        // Center
+        if (this.get().initialBounds) {
+          map.fitBounds(this.get().initialBounds);
+        }
+
+        // Add controls
+        map.addControl(new mapboxgl.NavigationControl());
+
+        // Allow scroll zoom on full screen
+        let fullscreenControl = new mapboxgl.FullscreenControl();
+        map.addControl(fullscreenControl);
+        window.document.addEventListener(
+          fullscreenControl._fullscreenchange,
+          () => {
+            if (fullscreenControl._fullscreen) {
+              map.scrollZoom.enable();
+            } else {
+              map.scrollZoom.disable();
+            }
+          }
+        );
+
+        // Geocode
+        this.addGeocoder();
+
+        // On map load
+        map.on("load", () => {
+          this.hexbins();
+          this.pois();
+          this.popover();
+        });
+      },
+
+      // Add geocoder
+      addGeocoder() {
+        if (!this.get().geocoder) {
+          return;
+        }
+
+        let { bounds } = this.get();
+        let $geocoderContainer = $(this.refs.geocoderContainer);
+
+        // Geocoding control
+        let geocoder;
+        geocoder = new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          country: "us",
+          bbox: bounds
+            ? [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]]
+            : undefined,
+          flyTo: false
+        });
+        $geocoderContainer.append(geocoder.onAdd(this.__map));
+      },
+
+      // Draw and handle hexbins
+      hexbins() {
+        if (!this.get().hexbins) {
+          return;
+        }
+        let map = this.__map;
+
+        // Get key layer ids
+        let {
+          firstLineId,
+          firstSymbolId,
+          waterLayers,
+          moveWaterLayers
+        } = this.mapKeyLayers();
+
+        // Add hex data
+        map.addSource("hex-bin-data", {
+          type: "geojson",
+          data: this.get().hexbins
+        });
+
+        // Style hexes
+        map.addLayer(
+          {
+            id: "hex-bin-data",
+            type: "fill",
+            source: "hex-bin-data",
+            paint: this.get().hexBaseStyles(this.get())
+          },
+          "road-primary"
+        );
+
+        // Make road lines a bit see-through
+        let layers = map.getStyle().layers;
+        for (let i = 0; i < layers.length; i++) {
+          if (layers[i].type === "line") {
+            map.setPaintProperty(layers[i].id, "line-opacity", 0.6);
+          }
+        }
+
+        // On different zoom levels, change
+        // TODO: Keep track and only do this on specific zoom change
+        map.on("zoomend", () => {
+          let z = map.getZoom();
+          if (z < 11.5) {
+            map.moveLayer("hex-bin-data", "road-primary");
+            moveWaterLayers("road-primary");
+          } else if (z < 13) {
+            map.moveLayer("hex-bin-data", "road-secondary-tertiary");
+            moveWaterLayers("road-secondary-tertiary");
+          } else if (z >= 13) {
+            map.moveLayer("hex-bin-data", firstLineId);
+            moveWaterLayers(firstLineId);
+          }
+
+          // Road line opacity
+          for (let i = 0; i < layers.length; i++) {
+            if (layers[i].type === "line") {
+              map.setPaintProperty(
+                layers[i].id,
+                "line-opacity",
+                z < 13 ? 0.6 : 1
+              );
+            }
+          }
+        });
+        map.fire("zoomend");
+      },
+
+      // Get some key layers
+      mapKeyLayers() {
+        let map = this.__map;
+        if (this.__mapKeyLayers) {
+          return this.__mapKeyLayers;
+        }
+
+        // https://www.mapbox.com/mapbox-gl-js/example/geojson-layer-in-stack/
+        let layers = map.getStyle().layers;
+
+        // Find the index of the first line layer in the map style
+        let firstLineId;
+        for (let i = 0; i < layers.length; i++) {
+          if (layers[i].type === "line" && !layers[i].id.match(/water/)) {
+            firstLineId = layers[i].id;
+            break;
+          }
+        }
+
+        // Find the index of the first symbol layer in the map style
+        let firstSymbolId;
+        for (let i = 0; i < layers.length; i++) {
+          if (layers[i].type === "symbol" && !layers[i].id.match(/water/)) {
+            firstSymbolId = layers[i].id;
+            break;
+          }
+        }
+
+        // Find water layers
+        let waterLayers = [];
+        for (let i = 0; i < layers.length; i++) {
+          if (layers[i].id.match(/water/) && layers[i].type !== "symbol") {
+            waterLayers.push(layers[i].id);
+          }
+        }
+        let moveWaterLayers = layerId => {
+          waterLayers.forEach(w => {
+            map.moveLayer(w, layerId);
+          });
+        };
+
+        this.__mapKeyLayers = {
+          firstLineId,
+          firstSymbolId,
+          waterLayers,
+          moveWaterLayers
+        };
+        return this.__mapKeyLayers;
+      },
+
+      // Draw pois
+      pois() {
+        let map = this.__map;
+        let { pois } = this.get();
+        let symbolTextMinZoom = 12;
+        if (!pois) {
+          return;
+        }
+
+        let { firstSymbolId } = this.mapKeyLayers();
+        pois.forEach(p => {
+          // Data
+          map.addSource(p.id, {
+            type: "geojson",
+            data: p.data
+          });
+
+          // Point
+          map.addLayer(
+            {
+              id: `${p.id}-point`,
+              type: "circle",
+              source: p.id,
+              paint: {
+                "circle-radius": [
+                  "interpolate",
+                  ["linear"],
+                  ["zoom"],
+                  10,
+                  4,
+                  18,
+                  9
+                ],
+                "circle-opacity": 1,
+                "circle-color": "#222222"
+              }
+            },
+            firstSymbolId
+          );
+
+          // Label
+          map.addLayer({
+            id: `${p.id}-label`,
+            type: "symbol",
+            source: p.id,
+            minzoom: symbolTextMinZoom,
+            layout: extend(
+              {
+                "text-field": "Station",
+                "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                "text-offset": [0, 0.6],
+                "text-anchor": "top",
+                "text-size": {
+                  stops: [
+                    [0, 0],
+                    [symbolTextMinZoom, 10],
+                    [symbolTextMinZoom + 2, 12]
+                  ]
+                }
+              },
+              {
+                "text-field": p.textField
+              }
+            ),
+            paint: {
+              "text-halo-color": "rgba(255, 255, 255, 0.8)",
+              "text-halo-width": 1,
+              "text-halo-blur": 0.5
+            }
+          });
+        });
+      },
+
+      // Popover
+      popover() {
+        let map = this.__map;
+        if (!this.get().popoverComponent) {
+          return;
+        }
+
+        let { firstSymbolId } = this.mapKeyLayers();
+
+        // Highlight layer (outline width is not supported in polygon layer)
+        map.addLayer(
+          {
+            id: "hex-bin-data-highlight",
+            type: "line",
+            source: "hex-bin-data",
+            paint: {
+              "line-width": 4,
+              "line-color": "#222222"
+            },
+            filter: ["==", "hex_id", ""]
+          },
+          firstSymbolId
+        );
+
+        // Close popover and unhighlight
+        let closePopover = () => {
+          map.setFilter("hex-bin-data", ["==", "hex_id", ""]);
+          this.set({ popoverOpen: false, highlight: undefined });
+        };
+
+        // Open popover
+        let openPopover = point => {
+          // Unsure why, but click doesn't already try to find features
+          let features = map.queryRenderedFeatures([point.x, point.y], {
+            layers: ["hex-bin-data"]
+          });
+
+          // Unhilight and close
+          if (!features || !features.length) {
+            closePopover();
+            return;
+          }
+
+          // Highlight and open
+          map.setFilter("hex-bin-data-highlight", [
+            "==",
+            "hex_id",
+            features[0].properties.hex_id
+          ]);
+
+          this.set({ popoverOpen: true, feature: features[0].properties });
+        };
+
+        // Handle click
+        map.on("click", "hex-bin-data", e => {
+          if (!e || !e.point) {
+            closePopover();
+            return;
+          }
+
+          openPopover(e.point);
+        });
+
+        // Mouseover events
+        map.on("mouseenter", "hex-bin-data", () => {
+          map.getCanvas().style.cursor = "pointer";
+        });
+        map.on("mouseleave", "hex-bin-data", () => {
+          map.getCanvas().style.cursor = "";
+        });
+      }
+    },
+
+    computed: {
+      colorScale({ colorSteps, colors }) {
+        return scaleThreshold()
+          .domain(colorSteps)
+          .range(colors);
+      },
+
+      fullColorSteps({ colorSteps }) {
+        return [0].concat(colorSteps);
+      },
+
+      state: state => state
+    },
+
+    helpers: {},
+
+    data() {
+      return {
+        popoverOpen: false,
+        mapStyleId: "mapbox://styles/shadowflare/cjfljh7oh6v6k2smuvb3jftac",
+        geocoder: false,
+        minZoom: 10,
+        maxZoom: 15,
+        initialZoom: 11,
+        colorSteps: [0, 1],
+        colors: [
+          "#ffffcc",
+          "#c7e9b4",
+          "#7fcdbb",
+          "#41b6c4",
+          "#2c7fb8",
+          "#253494"
+        ],
+        hexBaseStyles: ({ colorScale, colorSteps }) => {
+          // https://www.mapbox.com/mapbox-gl-js/style-spec/#layers-fill
+          return {
+            "fill-color": [
+              "case",
+              ["<", ["get", "incidents"], 1],
+              "#FCFCFC",
+              ["==", ["get", "incidents"], null],
+              "#FCFCFC",
+              ["<", ["get", "incidents"], 10],
+              "#878787",
+              ["step", ["get", "median_response_time"]]
+                .concat([colorScale(0)])
+                .concat(
+                  flatten(
+                    colorSteps.map(s => {
+                      return [s, colorScale(s)];
+                    })
+                  )
+                )
+            ],
+            "fill-opacity": 1
+          };
+        },
+        // Default to minutes thing
+        legendFormat: (step, si, fullColorSteps) => {
+          const toMinutes = (seconds, suffix = "") => {
+            return `${Math.floor(seconds / 60)} m
+                                                              ${
+                                                                seconds % 60
+                                                                  ? " " +
+                                                                    Math.round(
+                                                                      seconds % 60
+                                                                    )
+                                                                      .toString()
+                                                                      .padStart(
+                                                                        2,
+                                                                        "0"
+                                                                      ) +
+                                                                    " s"
+                                                                  : ""
+                                                              }
+                                                                ${suffix}`;
+          };
+          return si === 0
+            ? `<${toMinutes(fullColorSteps[si + 1])}`
+            : toMinutes(step, "+");
+        }
+      };
+    }
+  };
+</script>

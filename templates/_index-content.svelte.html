@@ -27,24 +27,23 @@
       <p>TK: Praesent dapibus eros mi, eget mattis felis pharetra in. Ut lobortis arcu suscipit volutpat dapibus. Vivamus nec pretium augue. Vestibulum quis auctor neque. Vivamus rhoncus, metus ut varius consectetur, quam quam sollicitudin sapien, ac ornare dolor sem mattis orci. Morbi finibus imperdiet orci nec vehicula. Aenean a risus velit. Aenean ultrices lacus et aliquet auctor. Maecenas dictum porta bibendum. Curabitur vel dignissim massa. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
     </div>
 
-    <div class="container-copy bottom-space">
-      <label for="address-search">Search an address or place in Minneapolis</label>
-      <div class="address-search" id="address-search"></div>
-    </div>
-
-    <div class="container-copy bottom-space">
-      <Legend title="Median response time for police departments" />
-    </div>
-
-    <div class="container-xxl">
-      <figure class="map-figure">
-        <div class="map-highlight" id="police-explorable-map"></div>
-
-        <figcaption>
-          <p>The map above shows the median response times for high priorty 911 calls for the police in specific cities in the Twin Cities.</p>
-        </figcaption>
-      </figure>
-    </div>
+    <HexMap
+      id="police-response-times-map"
+      caption="The map above shows the median response times for high priorty 911 calls for the police in specific cities in the Twin Cities."
+      hexbins="{ policeResponseTimeHexes }"
+      pois="{ pois }"
+      initialCenter="{ twinCitiesCenter }"
+      intialBounds="{ twinCitiesBounds }"
+      colorSteps="{ [60 * 6, 60 * 7.5, 60 * 9, 60 * 10.5, 60 * 12] }"
+      geocoder="{ true }"
+      legend="{ true }"
+      legendTitle="Median response time for police departments"
+      extraLegendSteps="{ [
+        { class: 'low-incidents', label: 'Less than 10 incidents' },
+        { class: 'no-incidents', label: 'No incidents' }
+      ] }"
+      popoverComponent="{ ResponseTimePopover }"
+    />
 
     <div class="container-copy bottom-space">
       <p>TK: Praesent dapibus eros mi, eget mattis felis pharetra in. Ut lobortis arcu suscipit volutpat dapibus. Vivamus nec pretium augue. Vestibulum quis auctor neque. Vivamus rhoncus, metus ut varius consectetur, quam quam sollicitudin sapien, ac ornare dolor sem mattis orci. Morbi finibus imperdiet orci nec vehicula. Aenean a risus velit. Aenean ultrices lacus et aliquet auctor. Maecenas dictum porta bibendum. Curabitur vel dignissim massa. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
@@ -86,24 +85,53 @@
 
 
 <script>
-  import Legend from "./shared/_legend.svelte.html";
   import Chart from "./shared/charts/_chart.svelte.html";
+  import HexMap from "./shared/maps/_hexbin-map.svelte.html";
+  import ResponseTimePopover from "./shared/maps/_response-time-popover.svelte.html";
+
+  // Data
+  import { feature } from "topojson";
   import mpdHourData from "../sources/mpd-response-times-by-hour.json";
+  import policeResponseTimesTopo from "../sources/hexbin-analysis-police.topo.json";
+  import mplsPoliceStations from "../sources/mpls-police-stations.geo.json";
+  import spPoliceStations from "../sources/sp-police-stations.geo.json";
 
   export default {
     components: {
-      Legend,
-      Chart
+      Chart,
+      HexMap
     },
 
     data() {
       return {
+        twinCitiesBounds: [
+          [-93.3487129795, 44.8787481227],
+          [-92.9895973789, 45.0618881395]
+        ],
+        twinCitiesCenter: [-93.191872, 44.960911],
         mpdHourData: mpdHourData.map(d => {
           return {
             x: d.incident_hour,
             y: d.median_response_time
           };
-        })
+        }),
+        policeResponseTimeHexes: feature(
+          policeResponseTimesTopo,
+          policeResponseTimesTopo.objects["hexbin-analysis-police.geo"]
+        ),
+        pois: [
+          {
+            id: "mpd-stations",
+            data: mplsPoliceStations,
+            textField: "Mpls Police {BUILDING_N}"
+          },
+          {
+            id: "spd-stations",
+            data: spPoliceStations,
+            textField: " St. Paul Police {name}"
+          }
+        ],
+        ResponseTimePopover
       };
     }
   };
