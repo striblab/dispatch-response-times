@@ -236,16 +236,21 @@ label[for="address-search"] {
     display: inline-block;
   }
 
+  .low-incidents {
+    background-color: #878787;
+    //outline: 1px solid $color-text;
+  }
+
   .no-incidents {
     background-color: #fcfcfc;
     outline: 1px solid $color-text;
+  }
 
-    .no-incidents-pattern {
-      height: 1.5em;
-      width: 1.5em;
-      background: #565656 url("../assets/images/patterns/white-stripes-64.png")
-        top left repeat;
-    }
+  .low-incidents-pattern {
+    height: 1.5em;
+    width: 1.5em;
+    background: #878787 url("../assets/images/patterns/white-stripes-64.png")
+      top left repeat;
   }
 }
 

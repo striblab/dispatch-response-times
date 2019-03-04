@@ -8,7 +8,7 @@ A look at dispatch/911 response time in the Twin Cities.
   - Dispatch data analysis from the `lib/hexbin-analysis.js` output.
     - Convert to topojson.
       - `./node_modules/.bin/geo2topo ../dispatch-analysis/data/build/hexbin-analysis.geo.json > ./sources/hexbin-analysis.topo.json`
-      - `./node_modules/.bin/geo2topo ../dispatch-analysis/data/build/hexbin-analysis-fire.geo.json > ./sources/hexbin-analysis-fire.topo.json`
+      - `./node_modules/.bin/geo2topo ../dispatch-analysis/data/build/hexbin-analysis-police.geo.json > ./sources/hexbin-analysis-police.topo.json`
   - Hour analysis from `lib/hour-analysis.js`
     - `cp ../dispatch-analysis/data/build/hour-analysis.json ./sources/mpd-response-times-by-hour.json`
 - [Minneapolis fire stations](http://opendata.minneapolismn.gov/datasets/fire-stations)
