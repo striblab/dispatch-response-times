@@ -25,13 +25,16 @@
           title="Response time histogram for this hex area"
           noLabel="{ true }"
           type="histogram"
-          padding="{{ top: 10, right: 20, bottom: 25, left: 30 }}"
+          padding="{{ top: 15, right: 25, bottom: 15, left: 20 }}"
           data="{ histogramData }"
+          histogramFill="{ (d) => colorScale(d.min) }"
           xMin="{ 0 }"
           xMax="{ maxBy(histogramData, 'max').max }"
-          xTickFormat="{ (d) => d }"
+          xTickValues="{ [180, 360, 540, 720, 1200] }"
+          xTickFormat="{ (d, di, len) => di === 0 ? '' : di === len - 1 ? '20m+' : secondsToMinutes(d, 'm', 's') }"
           yMin="{ 0 }"
           yMax="{ Math.max(10, maxBy(histogramData, 'count').count) }"
+          yLabel="Incidents"
         ></Chart>
       </div>
 
@@ -104,7 +107,6 @@
 
     computed: {
       histogramData({ feature }) {
-        console.log(feature);
         if (!feature || !feature.incidents) {
           return [];
         }
@@ -120,17 +122,6 @@
 
         // Put into min max and
         let interval;
-        console.log(bins);
-        console.log(
-          sortBy(bins, "bin").map((b, bi) => {
-            interval = bins[bi + 1] ? bins[bi + 1].bin - b.bin : interval;
-            return {
-              min: b.bin,
-              max: b.bin + interval,
-              count: b.count
-            };
-          })
-        );
         return sortBy(bins, "bin").map((b, bi) => {
           interval = bins[bi + 1] ? bins[bi + 1].bin - b.bin : interval;
           return {
@@ -146,10 +137,10 @@
       isNaN,
       maxBy,
 
-      secondsToMinutes(seconds) {
+      secondsToMinutes(seconds, minuteSuffix = " m", secondSuffix = " s") {
         return (
-          `${Math.floor(seconds / 60) || 0} m` +
-          (seconds % 60 ? ` ${Math.round(seconds % 60)} s` : "")
+          `${Math.floor(seconds / 60) || 0}${minuteSuffix}` +
+          (seconds % 60 ? ` ${Math.round(seconds % 60)}${secondSuffix}` : "")
         );
       }
     }

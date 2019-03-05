@@ -99,12 +99,20 @@
           .range([chartHeight, 0]);
       },
 
-      xTicks({ xTickCount, xScale }) {
-        return xScale && xScale.ticks ? xScale.ticks(xTickCount) : undefined;
+      xTicks({ xTickCount, xScale, xTickValues }) {
+        return xTickValues
+          ? xTickValues
+          : xScale && xScale.ticks
+          ? xScale.ticks(xTickCount)
+          : undefined;
       },
 
-      yTicks({ yTickCount, yScale }) {
-        return yScale && yScale.ticks ? yScale.ticks(yTickCount) : undefined;
+      yTicks({ yTickCount, yScale, yTickValues }) {
+        return yTickValues
+          ? yTickValues
+          : yScale && yScale.ticks
+          ? yScale.ticks(yTickCount)
+          : undefined;
       }
     },
 

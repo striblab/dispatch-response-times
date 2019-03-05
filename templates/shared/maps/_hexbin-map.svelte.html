@@ -37,7 +37,12 @@
   <figure class="map-figure">
     <div class="map-highlight" id="{ id || '' }" ref:mapEl>
       {#if popoverComponent}
-        <svelte:component this={ popoverComponent } feature="{ feature }" bind:popoverOpen="popoverOpen" />
+        <svelte:component
+          this={ popoverComponent }
+          feature="{ feature }"
+          colorScale="{ colorScale }"
+          bind:popoverOpen="popoverOpen"
+        />
       {/if}
     </div>
 
@@ -452,21 +457,22 @@
         legendFormat: (step, si, fullColorSteps) => {
           const toMinutes = (seconds, suffix = "") => {
             return `${Math.floor(seconds / 60)} m
-                                                              ${
-                                                                seconds % 60
-                                                                  ? " " +
-                                                                    Math.round(
-                                                                      seconds % 60
-                                                                    )
-                                                                      .toString()
-                                                                      .padStart(
-                                                                        2,
-                                                                        "0"
-                                                                      ) +
-                                                                    " s"
-                                                                  : ""
-                                                              }
-                                                                ${suffix}`;
+                                                                ${
+                                                                  seconds % 60
+                                                                    ? " " +
+                                                                      Math.round(
+                                                                        seconds %
+                                                                          60
+                                                                      )
+                                                                        .toString()
+                                                                        .padStart(
+                                                                          2,
+                                                                          "0"
+                                                                        ) +
+                                                                      " s"
+                                                                    : ""
+                                                                }
+                                                                  ${suffix}`;
           };
           return si === 0
             ? `<${toMinutes(fullColorSteps[si + 1])}`
