@@ -42,19 +42,23 @@
     }
   }
 
+  .axis-label {
+    font-size: 0.65em;
+  }
+
   .x-axis {
     .tick text {
       dominant-baseline: hanging;
     }
-  }
 
-  .y-axis {
     .axis-label {
-      font-size: 0.65em;
-      // Transform works more consistently in SVG tag
-      //transform: rotate(-90deg);
+      dominant-baseline: hanging;
     }
   }
+
+  // For y-axis label
+  // Transform works more consistently in SVG tag
+  //transform: rotate(-90deg);
 
   .baseline {
     stroke: map-get($grays, "dark");
@@ -69,7 +73,7 @@
 
   .annotation-line {
     stroke-width: 3;
-    fill: map-get($grays, "dark");
+    stroke: map-get($grays, "dark");
   }
 
   .path-line {

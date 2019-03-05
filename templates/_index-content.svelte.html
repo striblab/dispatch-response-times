@@ -33,7 +33,7 @@
       hexbins="{ policeResponseTimeHexes }"
       pois="{ pois }"
       initialCenter="{ twinCitiesCenter }"
-      intialBounds="{ twinCitiesBounds }"
+      initialBounds="{ [[policeResponseTimeBBox[0], policeResponseTimeBBox[1]], [policeResponseTimeBBox[2], policeResponseTimeBBox[3]]] }"
       colorSteps="{ [60 * 6, 60 * 7.5, 60 * 9, 60 * 10.5, 60 * 12] }"
       geocoder="{ true }"
       legend="{ true }"
@@ -63,6 +63,71 @@
       >Median response time by the Minneapolis Police Department by hour for the year of 2017.</Chart>
     </div>
 
+    <div class="container-copy bottom-space">
+      <p>TK: Praesent dapibus eros mi, eget mattis felis pharetra in. Ut lobortis arcu suscipit volutpat dapibus. Vivamus nec pretium augue. Vestibulum quis auctor neque. Vivamus rhoncus, metus ut varius consectetur, quam quam sollicitudin sapien, ac ornare dolor sem mattis orci. Morbi finibus imperdiet orci nec vehicula. Aenean a risus velit. Aenean ultrices lacus et aliquet auctor. Maecenas dictum porta bibendum. Curabitur vel dignissim massa. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+
+      <Chart
+        title="Neighborhoods... "
+        type="scatterplot"
+        padding="{{ top: 10, right: 20, bottom: 45, left: 30 }}"
+        data="{ mpdNeighborhoodData.filter(d => d.y && d.y > 0) }"
+        xMin="{ 5 }"
+        xMax="{ 14 }"
+        xTickFormat="{ (d, i) => d === 0 ? '' : d }"
+        xLabel="Median response time (minutes)"
+        yMin="{ 0 }"
+        yMax="{ 5500 }"
+        yTickFormat="{ (d, i, len) => i === 0 || i === len - 1 ? '' : d }"
+        yLabel="Number of incidents"
+      >Median response time and number of incidents plotted for each neighborhood in Minneapolis for high priority calls.</Chart>
+    </div>
+
+    <div class="container-copy bottom-space">
+      <p>TK: Praesent dapibus eros mi, eget mattis felis pharetra in. Ut lobortis arcu suscipit volutpat dapibus. Vivamus nec pretium augue. Vestibulum quis auctor neque. Vivamus rhoncus, metus ut varius consectetur, quam quam sollicitudin sapien, ac ornare dolor sem mattis orci. Morbi finibus imperdiet orci nec vehicula. Aenean a risus velit. Aenean ultrices lacus et aliquet auctor. Maecenas dictum porta bibendum. Curabitur vel dignissim massa. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+    </div>
+
+    <HexMap
+      id="police-incidents-map"
+      caption="The map above shows the number of incidents for high priorty 911 calls in 2017 for the police in Minneapolis and St. Paul."
+      hexbins="{ policeResponseTimeHexes }"
+      pois="{ pois }"
+      initialCenter="{ twinCitiesCenter }"
+      initialBounds="{ [[policeResponseTimeBBox[0], policeResponseTimeBBox[1]], [policeResponseTimeBBox[2], policeResponseTimeBBox[3]]] }"
+      colorSteps="{ [10, 50, 100, 250, 500] }"
+      colors="{ ['#ffffd4', '#fee391', '#fec44f', '#fe9929', '#d95f0e', '#993404'] }"
+      geocoder="{ false }"
+      legend="{ true }"
+      legendTitle="Number of incidents"
+      extraLegendSteps="{ [
+        { class: 'no-incidents', label: 'No incidents' }
+      ] }"
+      hexBaseStyles="{ ({ colorScale, colorSteps }) => {
+        return {
+          "fill-color": [
+            "case",
+            ["<", ["get", "incidents"], 1],
+            "#FCFCFC",
+            ["==", ["get", "incidents"], null],
+            "#FCFCFC",
+            ["step", ["get", "incidents"]]
+              .concat([colorScale(0)])
+              .concat(
+                flatten(
+                  colorSteps.map(s => {
+                    return [s, colorScale(s)];
+                  })
+                )
+              )
+          ],
+          "fill-opacity": 1
+        };
+      } }"
+      legendFormat="{ (step, si, fullColorSteps) => {
+        return si === 0 ? `<${fullColorSteps[si + 1]}` : `${step.toLocaleString()}${si === 1 || si === fullColorSteps.length - 1 ? '+' : ''}`;
+      } }"
+      popoverComponent="{ IncidentsPopover }"
+    />
+
     <div class="container-copy">
       <footer class="article-footer">
         <h1>Credits</h1>
@@ -88,10 +153,13 @@
   import Chart from "./shared/charts/_chart.svelte.html";
   import HexMap from "./shared/maps/_hexbin-map.svelte.html";
   import ResponseTimePopover from "./shared/maps/_response-time-popover.svelte.html";
+  import IncidentsPopover from "./shared/maps/_incidents-popover.svelte.html";
+  import { flatten, maxBy } from "lodash";
 
   // Data
   import { feature } from "topojson";
   import mpdHourData from "../sources/mpd-response-times-by-hour.json";
+  import mpdNeighborhoodData from "../sources/mpd-response-times-by-neighborhood.json";
   import policeResponseTimesTopo from "../sources/hexbin-analysis-police.topo.json";
   import mplsPoliceStations from "../sources/mpls-police-stations.geo.json";
   import spPoliceStations from "../sources/sp-police-stations.geo.json";
@@ -102,6 +170,11 @@
       HexMap
     },
 
+    helpers: {
+      flatten,
+      maxBy
+    },
+
     data() {
       return {
         twinCitiesBounds: [
@@ -109,6 +182,12 @@
           [-92.9895973789, 45.0618881395]
         ],
         twinCitiesCenter: [-93.191872, 44.960911],
+        mpdNeighborhoodData: mpdNeighborhoodData.map(d => {
+          return {
+            x: d.median_response_time,
+            y: d.incidents
+          };
+        }),
         mpdHourData: mpdHourData.map(d => {
           return {
             x: d.incident_hour,
@@ -119,6 +198,7 @@
           policeResponseTimesTopo,
           policeResponseTimesTopo.objects["hexbin-analysis-police.geo"]
         ),
+        policeResponseTimeBBox: policeResponseTimesTopo.bbox,
         pois: [
           {
             id: "mpd-stations",
@@ -131,7 +211,8 @@
             textField: " St. Paul Police {name}"
           }
         ],
-        ResponseTimePopover
+        ResponseTimePopover,
+        IncidentsPopover
       };
     }
   };

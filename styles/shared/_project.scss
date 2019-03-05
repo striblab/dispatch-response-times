@@ -110,7 +110,8 @@ footer {
     margin-bottom: 2em;
   }
 
-  .median-response {
+  .median-response,
+  .incident-count {
     margin-bottom: 1em;
     width: 50%;
     float: left;
@@ -122,7 +123,8 @@ footer {
       padding-right: 0;
     }
 
-    .median-response-value {
+    .median-response-value,
+    .incident-count-value {
       font-size: 2em;
       display: block;
     }

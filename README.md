@@ -11,6 +11,8 @@ A look at dispatch/911 response time in the Twin Cities.
       - `./node_modules/.bin/geo2topo ../dispatch-analysis/data/build/hexbin-analysis-police.geo.json > ./sources/hexbin-analysis-police.topo.json`
   - Hour analysis from `lib/hour-analysis.js`
     - `cp ../dispatch-analysis/data/build/hour-analysis.json ./sources/mpd-response-times-by-hour.json`
+  - Hour analysis from `lib/neighborhood-analysis.js`
+    - `cp ../dispatch-analysis/data/build/neighborhood-analysis.json ./sources/mpd-response-times-by-neighborhood.json`
 - [Minneapolis fire stations](http://opendata.minneapolismn.gov/datasets/fire-stations)
   - `mkdir -p data/sources && wget -O data/sources/mpls-fire-stations.zip "https://opendata.arcgis.com/datasets/e697e12884fd4421abaf4a71b513f509_0.zip" && unzip data/sources/mpls-fire-stations.zip -d data/sources/mpls-fire-stations && ogr2ogr -f GeoJSON sources/mpls-fire-stations.geo.json data/sources/mpls-fire-stations/MFD_FireStations.shp -t_srs "EPSG:4326"`
 - [Minneapolis police stations](http://opendata.minneapolismn.gov/datasets/police-stations)

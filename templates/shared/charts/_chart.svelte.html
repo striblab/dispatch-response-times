@@ -15,16 +15,18 @@
           <AxisX {...state} />
           <AxisY {...state} />
 
-          {#if annotationLines}
-            <AnnotationLines {...state}/>
-          {/if}
-
           {#if type === 'histogram'}
             <HistogramBars {...state} />
           {:elseif type === "line"}
             <Line {...state} />
           {:elseif type === "step-line"}
             <StepLine {...state} />
+          {:elseif type === "scatterplot"}
+            <Scatterplot {...state} />
+          {/if}
+
+          {#if annotationLines}
+            <AnnotationLines {...state}/>
           {/if}
         </g>
       </svg>
@@ -46,6 +48,7 @@
   import HistogramBars from "./_histogram-bars.svelte.html";
   import Line from "./_line.svelte.html";
   import StepLine from "./_step-line.svelte.html";
+  import Scatterplot from "./_scatterplot.svelte.html";
 
   /* global d3, c3 */
   export default {
@@ -55,12 +58,11 @@
       AnnotationLines,
       HistogramBars,
       Line,
-      StepLine
+      StepLine,
+      Scatterplot
     },
 
     oncreate() {
-      console.log(this.get());
-
       // let { xMin, xMax, yMin, yMax, chartWidth, chartHeight } = this.get();
       // this.set({
       //   xScale: scaleLinear()

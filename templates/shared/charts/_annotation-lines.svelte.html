@@ -1,11 +1,16 @@
 
-{#each annotationLines as a, i}
-  <line class="annotation-line annotation-line-{ i }"
-    x1="{ xScale(a) }"
-    y1="{ 0 }"
-    x2="{ xScale(a) }"
-    y2="{ chartHeight }"></line>
-{/each}
+<g class="annotation-lines">
+  {#each annotationLines as a, i}
+    <g class="annotation-line-group" transform="translate({ xScale(a && a.x ? a.x : a) }, 0)">
+      <line
+        class="annotation-line annotation-line-{ i }"
+        x1="0"
+        y1="0"
+        x2="0"
+        y2="{ chartHeight }" />
+    </g>
+  {/each}
+</g>
 
 <script>
   export default {

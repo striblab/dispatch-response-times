@@ -1,0 +1,19 @@
+
+<g class="scaterplot-circles">
+  {#each data as d, i}
+    <circle class="scaterplot-circle"
+      cx="{ xScale(d.x) }"
+      cy="{ yScale(d.y) }"
+      r="{ radius || 3 }"
+      style="{ scaterplotFill ? `fill: ${scaterplotFill(d, i, data)};` : '' }"
+    />
+  {:else}
+    <!-- -->
+  {/each}
+</g>
+
+<script>
+  export default {
+    namespace: "svg"
+  };
+</script>

@@ -12,10 +12,22 @@
   {#if xBaseline}
     <line class="baseline" y1="{ chartHeight + 0.5 }" y2="{ chartHeight + 0.5}" x1="0" x2="{ chartWidth }"></line>
   {/if}
+
+  {#if xLabel}
+    <g class="axis-label-group" transform="translate({ chartWidth / 2 }, { chartHeight + xLabelOffset })">
+      <text class="axis-label" x="0" y="0"text-anchor="middle">{ xLabel }</text>
+    </g>
+  {/if}
 </g>
 
 <script>
   export default {
-    namespace: "svg"
+    namespace: "svg",
+
+    data() {
+      return {
+        xLabelOffset: 20
+      };
+    }
   };
 </script>

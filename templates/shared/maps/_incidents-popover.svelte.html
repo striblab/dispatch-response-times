@@ -1,5 +1,5 @@
 
-<div class="popover popover-response-time { popoverOpen ? 'active' : '' }">
+<div class="popover popover-incidents { popoverOpen ? 'active' : '' }">
   <button type="button" class="button-link dark popover-close" on:click="closePopover(event)">x</button>
   <div class="popover-content">
     {#if !feature}
@@ -7,38 +7,15 @@
     {:elseif !feature || !feature.incidents}
       <div class="no-incidents">There were no incidents in this area in 2017.</div>
     {:else}
-      {#if feature.incidents < incidientThreshold}
-        <div class="no-incidents">There were less than { incidientThreshold } incidents in 2017 for this area.</div>
-      {/if}
-
-      <div class="median-response">
-        <span class="median-response-value">
-          { secondsToMinutes(feature.median_response_time) }
+      <div class="incident-count">
+        <span class="incident-count-value">
+          { feature.incidents.toLocaleString() }
+          { feature.incidents > 1 ? 'incidents' : 'incident' }
         </span>
 
-        <span class="median-response-label">
-          Median response time for <strong>{ feature.incidents.toLocaleString() }</strong> high priority incidents in 2017.
+        <span class="incident-count-label">
+          The median response time was <strong>{ secondsToMinutes(feature.median_response_time) }</strong> for high priority incidents in 2017.
         </span>
-      </div>
-
-      <div class="hex-histogram">
-        <Chart
-          id="hex-bin-popover-chart"
-          title="Response time histogram for this hex area"
-          noLabel="{ true }"
-          type="histogram"
-          padding="{{ top: 15, right: 25, bottom: 15, left: 20 }}"
-          data="{ histogramData }"
-          histogramFill="{ (d) => colorScale(d.min) }"
-          xMin="{ 0 }"
-          xMax="{ maxBy(histogramData, 'max').max }"
-          xTickValues="{ [180, 360, 540, 720, 1200] }"
-          xTickFormat="{ (d, di, len) => di === len - 1 ? '20m+' : secondsToMinutes(d, 'm', 's') }"
-          yMin="{ 0 }"
-          yMax="{ Math.max(10, maxBy(histogramData, 'count').count) }"
-          yLabel="Incidents"
-          annotationLines="{[ feature.median_response_time ]}"
-        ></Chart>
       </div>
 
       <div class="median-times">
@@ -90,14 +67,9 @@
 </div>
 
 <script>
-  import Chart from "../charts/_chart.svelte.html";
   import { isNaN, forEach, sortBy, maxBy } from "lodash";
 
   export default {
-    components: {
-      Chart
-    },
-
     methods: {
       closePopover(event) {
         if (event && event.preventDefault) {
@@ -108,37 +80,8 @@
       }
     },
 
-    computed: {
-      histogramData({ feature }) {
-        if (!feature || !feature.incidents) {
-          return [];
-        }
-
-        // Get raw data from histo_ properties
-        let bins = [];
-        forEach(feature, (v, k) => {
-          let m = k.match(/^histo_([0-9]+)/i);
-          if (m) {
-            bins.push({ bin: parseInt(m[1], 10), count: v });
-          }
-        });
-
-        // Put into min max and
-        let interval;
-        return sortBy(bins, "bin").map((b, bi) => {
-          interval = bins[bi + 1] ? bins[bi + 1].bin - b.bin : interval;
-          return {
-            min: b.bin,
-            max: b.bin + interval,
-            count: b.count
-          };
-        });
-      }
-    },
-
     helpers: {
       isNaN,
-      maxBy,
 
       secondsToMinutes(seconds, minuteSuffix = " m", secondSuffix = " s") {
         return (
@@ -146,12 +89,6 @@
           (seconds % 60 ? ` ${Math.round(seconds % 60)}${secondSuffix}` : "")
         );
       }
-    },
-
-    data() {
-      return {
-        incidientThreshold: 10
-      };
     }
   };
 </script>
