@@ -2,23 +2,24 @@
 <div class="strib-styles ssa ssb ssc">
   <section class="">
     <div class="hero container-lg">
-      <h1>DRAFT: 911 response times</h1>
+      <h1>Response times tk tk tk</h1>
 
-      <p class="lead container-md">Not to be shared.</p>
+      <p class="lead container-md">Lead-in paragraph tk tk.</p>
 
       <div class="byline">
         <address>By
-          <a rel="author" href="http://startribune.com/alan-palazzolo/440928273/">Alan Palazzolo</a>
-          and
           <a rel="author" href="http://startribune.com/eric-roper/62906482/">Eric Roper</a>
+          and
+          <a rel="author" href="http://startribune.com/alan-palazzolo/440928273/">Alan Palazzolo</a>
         </address>
         <span class="spacer"></span>
         Star Tribune
         <span class="spacer-alt"></span>
-        <time pubdate datetime="2018-10-14T16:00:00">--</time>
+        <time pubdate datetime="2019-03-10T00:00:00">March 10, 2019</time>
       </div>
 
       <div class="share-placeholder">
+        <!-- This will get replaced with share buttons -->
         <!-- share -->
       </div>
     </div>
@@ -29,7 +30,7 @@
 
     <HexMap
       id="police-response-times-map"
-      caption="The map above shows the median response times for high priorty 911 calls for the police in specific cities in the Twin Cities."
+      caption="The map above shows the median response times for high-priorty 911 calls for the Minneapolis and St. Paul police departments in the Twin Cities as divided by quarter-mile hexagons."
       hexbins="{ policeResponseTimeHexes }"
       pois="{ pois }"
       initialCenter="{ twinCitiesCenter }"
@@ -37,7 +38,7 @@
       colorSteps="{ [60 * 6, 60 * 7.5, 60 * 9, 60 * 10.5, 60 * 12] }"
       geocoder="{ true }"
       legend="{ true }"
-      legendTitle="Median response time for police departments"
+      legendTitle="Median 911 response times across the Twin Cities"
       extraLegendSteps="{ [
         { class: 'low-incidents', label: 'Less than 10 incidents' },
         { class: 'no-incidents', label: 'No incidents' }
@@ -168,6 +169,12 @@
     components: {
       Chart,
       HexMap
+    },
+
+    oncreate() {
+      if (this.get().attachShare) {
+        this.get().attachShare();
+      }
     },
 
     helpers: {

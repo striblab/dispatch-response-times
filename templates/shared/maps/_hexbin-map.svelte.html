@@ -1,4 +1,4 @@
-{#if geocoder}
+{#if geocoder && geocoder !== 'inline'}
   <div class="container-copy bottom-space">
     <label for="address-search">Search an address or place in Minneapolis</label>
     <div class="address-search" id="address-search" ref:geocoderContainer></div>
@@ -124,24 +124,59 @@
 
       // Add geocoder
       addGeocoder() {
-        if (!this.get().geocoder) {
+        let map = this.__map;
+        let { initialBounds } = this.get();
+        if (!this.get().geocoder || !map) {
           return;
         }
 
-        let { bounds } = this.get();
-        let $geocoderContainer = $(this.refs.geocoderContainer);
-
         // Geocoding control
-        let geocoder;
-        geocoder = new MapboxGeocoder({
+        let geocoder = new MapboxGeocoder({
           accessToken: mapboxgl.accessToken,
           country: "us",
-          bbox: bounds
-            ? [bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1]]
+          bbox: initialBounds
+            ? [
+                initialBounds[0][0],
+                initialBounds[0][1],
+                initialBounds[1][0],
+                initialBounds[1][1]
+              ]
             : undefined,
           flyTo: false
         });
-        $geocoderContainer.append(geocoder.onAdd(this.__map));
+        geocoder.on("error", console.error);
+
+        // Handle result
+        geocoder.on("result", ({ result }) => {
+          this.popoverClose();
+
+          // queryRenderedFeatures only looks at current view port so we have to do
+          // some stupid ness
+          map.flyTo(
+            {
+              center: result.center,
+              zoom: 13
+            },
+            {
+              source: "geocode-hack"
+            }
+          );
+          map.once("moveend", e => {
+            if (!e || !e.source === "geocode-hack") {
+              return;
+            }
+
+            // Open popover
+            this.popoverOpen(map.project(result.center));
+          });
+        });
+
+        // Add input/control
+        if (this.get().geocoder !== "inline" && this.refs.geocoderContainer) {
+          this.refs.geocoderContainer.appendChild(geocoder.onAdd(map));
+        } else {
+          map.addControl(geocoder);
+        }
       },
 
       // Draw and handle hexbins
@@ -345,6 +380,34 @@
         this.set({ popoverOpen: false, highlight: undefined });
       },
 
+      // Open popover from point
+      popoverOpen(point) {
+        let map = this.__map;
+        if (!map) {
+          return;
+        }
+
+        // Unsure why, but click doesn't already try to find features
+        let features = map.queryRenderedFeatures([point.x, point.y], {
+          layers: ["hex-bin-data"]
+        });
+
+        // Unhilight and close
+        if (!features || !features.length) {
+          this.popoverClose();
+          return;
+        }
+
+        // Highlight and open
+        map.setFilter("hex-bin-data-highlight", [
+          "==",
+          "hex_id",
+          features[0].properties.hex_id
+        ]);
+
+        this.set({ popoverOpen: true, feature: features[0].properties });
+      },
+
       // Popover
       popover() {
         let map = this.__map;
@@ -369,29 +432,6 @@
           firstSymbolId
         );
 
-        // Open popover
-        let openPopover = point => {
-          // Unsure why, but click doesn't already try to find features
-          let features = map.queryRenderedFeatures([point.x, point.y], {
-            layers: ["hex-bin-data"]
-          });
-
-          // Unhilight and close
-          if (!features || !features.length) {
-            this.popoverClose();
-            return;
-          }
-
-          // Highlight and open
-          map.setFilter("hex-bin-data-highlight", [
-            "==",
-            "hex_id",
-            features[0].properties.hex_id
-          ]);
-
-          this.set({ popoverOpen: true, feature: features[0].properties });
-        };
-
         // Handle click
         map.on("click", "hex-bin-data", e => {
           if (!e || !e.point) {
@@ -399,7 +439,7 @@
             return;
           }
 
-          openPopover(e.point);
+          this.popoverOpen(e.point);
         });
 
         // Mouseover events
@@ -473,16 +513,16 @@
         legendFormat: (step, si, fullColorSteps) => {
           const toMinutes = (seconds, suffix = "") => {
             return `${Math.floor(seconds / 60)} m
-                        ${
-                          seconds % 60
-                            ? " " +
-                              Math.round(seconds % 60)
-                                .toString()
-                                .padStart(2, "0") +
-                              " s"
-                            : ""
-                        }
-                          ${suffix}`;
+                                          ${
+                                            seconds % 60
+                                              ? " " +
+                                                Math.round(seconds % 60)
+                                                  .toString()
+                                                  .padStart(2, "0") +
+                                                " s"
+                                              : ""
+                                          }
+                                            ${suffix}`;
           };
           return si === 0
             ? `<${toMinutes(fullColorSteps[si + 1])}`
