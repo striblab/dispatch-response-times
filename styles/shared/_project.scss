@@ -40,11 +40,6 @@ figure {
   margin-bottom: 2em;
 }
 
-.map-embed {
-  height: 600px;
-  height: 90vh;
-}
-
 .map-highlight {
   width: 100%;
   height: 600px;
@@ -55,11 +50,11 @@ figure {
 }
 
 .container-xxl .map-highlight {
-  height: 80vh;
+  height: 75vh;
   position: relative;
 
   @include media-breakpoint-up("md") {
-    height: 90vh;
+    height: 95vh;
   }
 }
 
@@ -221,6 +216,7 @@ label[for="address-search"] {
     float: left;
     margin: 0 1em 0.5em 0;
     max-width: 50%;
+    white-space: nowrap;
   }
 
   .legend-swatch {
