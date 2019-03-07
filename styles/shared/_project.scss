@@ -50,6 +50,8 @@ figure {
   height: 600px;
   height: 80vh;
   min-height: 400px;
+  background-size: cover;
+  background-position: center center;
 }
 
 .container-xxl .map-highlight {
@@ -92,6 +94,7 @@ figure {
 
   .popover-content {
     overflow-y: auto;
+    overflow-x: hidden;
     font-size: 1.15em;
     padding: 0.5em;
   }
@@ -117,15 +120,6 @@ figure {
   .median-response,
   .incident-count {
     margin-bottom: 1em;
-    width: 50%;
-    float: left;
-    padding-right: 3em;
-
-    @include media-breakpoint-up("md") {
-      width: 100%;
-      float: none;
-      padding-right: 0;
-    }
 
     .median-response-value,
     .incident-count-value {
@@ -135,14 +129,6 @@ figure {
   }
 
   .hex-histogram {
-    width: 50%;
-    float: left;
-
-    @include media-breakpoint-up("md") {
-      width: 100%;
-      float: none;
-    }
-
     .histogram-bar {
       fill: map-get($grays, "medium");
     }
@@ -155,6 +141,16 @@ figure {
     .median-label {
       font-size: 0.75em;
       dominant-baseline: hanging;
+    }
+  }
+
+  .hex-histogram,
+  .median-times,
+  .frequent-incident {
+    display: none;
+
+    @include media-breakpoint-up("md") {
+      display: block;
     }
   }
 }
@@ -259,14 +255,48 @@ label[for="address-search"] {
   }
 }
 
+// Map toggle
+.map-toggle {
+  text-align: center;
+  border-bottom: 1px solid map-get($grays, "lighter");
+  padding-bottom: 1em;
+
+  span {
+    display: inline-block;
+    margin-right: 0.5em;
+  }
+
+  button {
+    background-color: map-get($grays, "light");
+    color: $color-text;
+    font-size: 0.85em;
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    &.active {
+      color: $color-white;
+      background-color: map-get($grays, "dark");
+      border: 2px solid darken(map-get($grays, "dark"), 20);
+    }
+  }
+}
+
 // Some overrides for MapboxGL
 .mapboxgl-map {
   @include font-styles("benton-sans");
 }
 
 .mapboxgl-ctrl-top-right {
+  text-align: right;
+
   .mapboxgl-ctrl-group {
     display: inline-block;
+    float: none;
+  }
+
+  & > .mapboxgl-ctrl {
     float: none;
   }
 
