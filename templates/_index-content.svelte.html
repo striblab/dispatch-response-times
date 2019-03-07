@@ -202,7 +202,7 @@
   import HexMap from "./shared/maps/_hexbin-map.svelte.html";
   import ResponseTimePopover from "./shared/maps/_response-time-popover.svelte.html";
   import IncidentsPopover from "./shared/maps/_incidents-popover.svelte.html";
-  import { flatten, maxBy } from "lodash";
+  import { flatten } from "lodash";
 
   // Data
   import { feature } from "topojson";
@@ -225,8 +225,7 @@
     },
 
     helpers: {
-      flatten,
-      maxBy
+      flatten
     },
 
     data() {
