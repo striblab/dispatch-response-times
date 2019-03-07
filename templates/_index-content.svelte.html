@@ -25,7 +25,13 @@
     </div>
 
     <div class="container-copy bottom-space">
-      <p>TK: Praesent dapibus eros mi, eget mattis felis pharetra in. Ut lobortis arcu suscipit volutpat dapibus. Vivamus nec pretium augue. Vestibulum quis auctor neque. Vivamus rhoncus, metus ut varius consectetur, quam quam sollicitudin sapien, ac ornare dolor sem mattis orci. Morbi finibus imperdiet orci nec vehicula. Aenean a risus velit. Aenean ultrices lacus et aliquet auctor. Maecenas dictum porta bibendum. Curabitur vel dignissim massa. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+      <p>Rick Dunbar watched from his car as a man tried to force his way inside his daughter’s Minneapolis rental property, meddling with the door for several minutes. He called 911.</p>
+
+      <p>And then he waited — for 38 minutes. By the time police arrived at the Linden Hills house, the man had left.</p>
+
+      <p>“If this guy would have just kicked the door in ... he could have took TVs and whatever else and they still would have never caught him,” Dunbar said.  “The guy ain’t going to stick around if he’s a burglar.”</p>
+
+      <p>The timeline might have been different if Dunbar called from another neighborhood. But police take longer on average to respond to high-priority 911 calls near Minneapolis’ southern border, based on a Star Tribune analysis of more than 70,000 calls in Minneapolis and St. Paul. In some neighborhoods, median response times were five minutes longer than Minneapolis’ citywide median of just under 8 minutes.</p>
     </div>
 
     <HexMap
@@ -36,9 +42,9 @@
       initialCenter="{ twinCitiesCenter }"
       initialBounds="{ [[policeResponseTimeBBox[0], policeResponseTimeBBox[1]], [policeResponseTimeBBox[2], policeResponseTimeBBox[3]]] }"
       colorSteps="{ [60 * 6, 60 * 7.5, 60 * 9, 60 * 10.5, 60 * 12] }"
-      geocoder="{ true }"
+      geocoder="inline"
       legend="{ true }"
-      legendTitle="Median 911 response times across the Twin Cities"
+      legendTitle="Response times of high-priority calls"
       extraLegendSteps="{ [
         { class: 'low-incidents', label: 'Less than 10 incidents' },
         { class: 'no-incidents', label: 'No incidents' }
@@ -47,7 +53,13 @@
     />
 
     <div class="container-copy bottom-space">
-      <p>TK: Praesent dapibus eros mi, eget mattis felis pharetra in. Ut lobortis arcu suscipit volutpat dapibus. Vivamus nec pretium augue. Vestibulum quis auctor neque. Vivamus rhoncus, metus ut varius consectetur, quam quam sollicitudin sapien, ac ornare dolor sem mattis orci. Morbi finibus imperdiet orci nec vehicula. Aenean a risus velit. Aenean ultrices lacus et aliquet auctor. Maecenas dictum porta bibendum. Curabitur vel dignissim massa. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+      <p>“I felt really vulnerable at the time that it took for them to get to me,” said Neal Hagberg, who frantically called 911 last fall near Minnehaha Parkway after two men chased him for several blocks during an attempted car jacking. It took about 12 minutes for officers to arrive.</p>
+
+      <p>Fewer people call 911 from the areas where the analysis shows higher response times, police department officials said, leaving more officers clustered closer to the higher-crime parts of the city. Officers traveled more than four miles from central Lake Street to reach Dunbar’s call, for example.</p>
+
+      <p>“We have to walk that line between, ‘Do I add more officers over here so I can get response times down? Or do I add officers over here to try and reduce violent crime?’ said assistant chief Mike Kjos. “And it’s not an easy answer. There’s no formula.”</p>
+
+      <p>The department changed some procedures in response to Star Tribune inquiries. The newspaper asked the department to review 50 high-priority calls — chosen at random — that took more than 30 minutes before officers arrived. In a number of those cases, the department discovered, callers likely waited longer because officers were transitioning between shifts. The data shows median response times more than doubled during the 6 a.m. hour, when the day shift begins and calls are also at their lowest volume.</p>
 
       <Chart
         title="Response time spikes at 6AM shift change"
@@ -61,30 +73,57 @@
         yMax="{ 20 }"
         yTickFormat="{ (d, i, len) => i === 0 || i === len - 1 ? '' : d }"
         yLabel="Median response time (minutes)"
-      >Median response time by the Minneapolis Police Department by hour for the year of 2017.</Chart>
-    </div>
+      >Median response time by the Minneapolis Police Department by hour for the year of 2017.  During the 6AM hour, the median response time jumps up; this is also the hour with the lowest number of high-priority incidents.</Chart>
 
-    <div class="container-copy bottom-space">
-      <p>TK: Praesent dapibus eros mi, eget mattis felis pharetra in. Ut lobortis arcu suscipit volutpat dapibus. Vivamus nec pretium augue. Vestibulum quis auctor neque. Vivamus rhoncus, metus ut varius consectetur, quam quam sollicitudin sapien, ac ornare dolor sem mattis orci. Morbi finibus imperdiet orci nec vehicula. Aenean a risus velit. Aenean ultrices lacus et aliquet auctor. Maecenas dictum porta bibendum. Curabitur vel dignissim massa. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+      <p>Now, Kjos said, precincts will keep a squad car available during shift change.</p>
 
-      <Chart
-        title="Neighborhoods... "
-        type="scatterplot"
-        padding="{{ top: 10, right: 20, bottom: 45, left: 30 }}"
-        data="{ mpdNeighborhoodData.filter(d => d.y && d.y > 0) }"
-        xMin="{ 5 }"
-        xMax="{ 14 }"
-        xTickFormat="{ (d, i) => d === 0 ? '' : d }"
-        xLabel="Median response time (minutes)"
-        yMin="{ 0 }"
-        yMax="{ 5500 }"
-        yTickFormat="{ (d, i, len) => i === 0 || i === len - 1 ? '' : d }"
-        yLabel="Number of incidents"
-      >Median response time and number of incidents plotted for each neighborhood in Minneapolis for high priority calls.</Chart>
-    </div>
+      <p>“It brought to light a clear issue that needed to be addressed,” Kjos said.</p>
 
-    <div class="container-copy bottom-space">
-      <p>TK: Praesent dapibus eros mi, eget mattis felis pharetra in. Ut lobortis arcu suscipit volutpat dapibus. Vivamus nec pretium augue. Vestibulum quis auctor neque. Vivamus rhoncus, metus ut varius consectetur, quam quam sollicitudin sapien, ac ornare dolor sem mattis orci. Morbi finibus imperdiet orci nec vehicula. Aenean a risus velit. Aenean ultrices lacus et aliquet auctor. Maecenas dictum porta bibendum. Curabitur vel dignissim massa. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+      <p>The department also found that response times sometimes exceeded 30 minutes because the priority of the call had been escalated or downgraded as more information became available, more pressing incidents took priority, or officers were likely busy handling bar close activity.</p>
+
+      <p>One extreme example played out last fall just east of Lake Nokomis. In the parking lot of Oxendale’s Market, a man who had just agreed to give another man a ride pulled a sawed-off shotgun out of his trunk and said, “You know what this is. Give it up.” The would-be passenger handed over $305, but then tackled the gunman and a melee ensued. A woman from the car even began pummeling the victim.</p>
+
+      <p>The driver then fired the gun as the victim ran away. No one was hit and the gunman sped off.</p>
+
+      <p>Witnesses called 911 and then carefully guarded the two shell casings on the ground as they waited for police. Squads arrived 40 minutes later. The precinct inspector later wrote in an e-mail to the local council member that all precinct squads were tied up on other calls, including an emotional disturbed person incident in Seward.</p>
+
+      <p>“I was dumbfounded by it, to say the least,” said Alan Zocher, Oxendale’s store manager. “I thought that would have been a big enough issue where they would have gotten here faster.”</p>
+
+      <h3>Always been a challenge</h3>
+
+      <p>The department regularly reports response times for the city’s five precincts, which are broad areas that include both crime hot spots and sleepier environs near the border. The Star Tribune used computer-aided dispatch data from 2017 to calculate the median times for much smaller areas, illustrating dramatic differences between border neighborhoods and the urban core. </p>
+
+      <p>Dispatchers determine whether a call is high priority, and the severity of those calls ranged from suspicious person to an assault in progress. One woman called to report hearing screaming while walking her dog. In another instance, people called about an emotionally disturbed man carrying a knife into neighborhood businesses. Some others involved home and business alarm systems.</p>
+
+      <p>St. Paul had about a fifth as many high-priority calls during the period analyzed, but priority classifications aren’t identical between the cities. The geographic disparities in response times in St. Paul were less distinct.</p>
+
+      <p>“I’ve got neighborhoods next to each other that have vastly different times,” said council member Jeremy Schroeder, who represents a ward bordering Richfield and the airport. “That’s disturbing.”</p>
+
+      <p>Median response times were longer than 12 minutes in the Page, Morris Park, Wenonah, Diamond Lake, Armatage, Fulton and Shingle Creek neighborhoods. Most of that time is spent driving to the scene. By contrast, response times were closer to seven minutes in neighborhoods like Jordan, Hawthorne and Whittier, which have among of the most calls in the city.</p>
+
+      <p>“The people that live around those [Chain of Lakes] areas and get higher property taxes aren’t getting nearly the patrol that’s going on at Lake and Nicollet and Franklin and Lyndale,” said Bob Kroll, who leads the city’s police union. “They’re not getting the same amount of coverage. That’s always been a challenge. And its always been a shame.”</p>
+
+      <p>Some, including Kroll, say the data illustrate a need for more police officers. Police Chief Medaria Arradondo has said he would like to see the department grow from 890 officers to 1,000. But police department funding has been a controversial topic at the City Council.</p>
+
+      <p>“From a budget perspective why don’t we staff our precincts appropriately? Because 911 callers need help now,” asked council member Linea Palmisano, who represents a southwestern ward. “Part of what we need is the political will to give police departments the resources they need to be effective first responders.”</p>
+
+      <p>Council Member Andrew Johnson said he would like to see better response times in neighborhood farther from the city’s core. He asked city staff last year to analyze whether staff other than police can respond to some 911 calls.“It’s not just a question of ‘Do we add more officers here?’ It’s also a question of, ‘What work are officers doing today, that’s on their plates, that doesn’t need to be?’” Johnson said. “And how can we free up their time from calls where they can be answered more efficiently by sending a civilian, or someone else who works for the city out to handle them?” Kroll pressed back on the idea of “policing without police.” “That sounds great in theory until someone who doesn’t have a gun or the proper equipment on goes to a call” that it is more dangerous than they expected, he said. Some of the response time differences are also baked into the dispatch process. Kjos said officers are responsible for handling calls in their respective response zones, which are generally larger in areas with lower call volumes.</p>
+
+      <p>“I think that it’s unfortunate that when you live in an area that doesn’t have very many calls, that that area tends to get to be a large space for an individual squad,” Kjos said. “Which makes it more difficult to get from point A to point B in a timely manner.”</p>
+
+      <h3>Where are they?</h3>
+
+      <p>In Dunbar’s case, the man trying to force his way into the house was likely an acquaintance of a tenant, who was sleeping inside at the time. He later had to replace the door because it was so damaged.</p>
+
+      <p>“It just seems like it’s taking longer and longer for them to respond,” Dunbar said.</p>
+
+      <p>Hagberg was in his driveway one Sunday morning when two young men approached him saying they were lost and needed help. He agreed to give them a ride, but after some time driving the men demanded his keys. One man grabbed him as he reached for his phone.</p>
+
+      <p>So Hagberg took off running.</p>
+
+      <p>“They chased me for almost three blocks,” Hagberg said. After reaching Chicago Avenue he dialed 911 and stayed on the line as he waited for help.</p>
+
+      <p>“I said, ‘Look, my life I feel like is threatened at this point,’” Hagberg recalled. “So where are they?’”</p>
     </div>
 
     <HexMap
@@ -96,7 +135,7 @@
       initialBounds="{ [[policeResponseTimeBBox[0], policeResponseTimeBBox[1]], [policeResponseTimeBBox[2], policeResponseTimeBBox[3]]] }"
       colorSteps="{ [10, 50, 100, 250, 500] }"
       colors="{ ['#ffffd4', '#fee391', '#fec44f', '#fe9929', '#d95f0e', '#993404'] }"
-      geocoder="{ false }"
+      geocoder="inline"
       legend="{ true }"
       legendTitle="Number of incidents"
       extraLegendSteps="{ [
@@ -141,9 +180,17 @@
 
         <h1>Methodology</h1>
 
-        <p>Dispatch data provided by each relevant dispatch organization.</p>
+        <p>Dispatch data provided by the <a href="https://www.ramseycounty.us/your-government/departments/safety-and-justice/emergency-communications" target="_blank" rel="noopener">Ramsey County Emergency Communications Center</a> and the <a href="http://www.minneapolismn.gov/911/index.htm" target="_blank" rel="noopener">Minneapolis Emergency Communications Center</a>.</p>
 
-        <p>The Star Tribune analyzed dispatch data that provided relevant priority fields.  High priority is overall defined as Priority 1 or more (though in St. Paul, this was Priority 2 and more).  Response data was calculated as the time between First Keystroke (or Call Pickup, if keystroke data was not provided) to First Unit Arrived.  The analysis excluded any data that was marked as officer-initiated or the time data suggested that the incident was officer-initiated, as well as any data that did not have the necessary time data to caluclate response time.  </p>
+        <p>The Star Tribune analyzed over 700,000+ dispatch incidents for the Minneapolis and St. Paul police departments.</p>
+
+        <p>In this analysis we focused on high-priotiy calls that were not initiated by an officer (i.e. a traffic stop or officer witnessing a crime).  High priority in Minneapolis is defined as Priority code 1 or 0, and in St. Paul this is defined as Priority codes 2, 2A, and 1.  It is important to note that across and within each agency, what is high-priority is a range of types of incidents, and the priority may be altered or adjusted according to what happens during the call or once the officer arrives at a scene.</p>
+
+        <p>Incidents were considered initiated by officers either by a field in the data or timestamps in the data indicated that the incident was most-likely officer-initiated.</p>
+
+        <p>Response times were calculated as the time between "First Keystroke" (or "Call Pickup", if keystroke data was not provided) to "First Unit Arrived".  Any incidents where this could not be calculated was not included in our main analysis.</p>
+
+        <p>Code and more details for our analysis can be found <a href="https://github.com/striblab/dispatch-analysis" target="_blank" rel="noopener">here on Github</a>.</p>
       </footer>
     </div>
   </section>
