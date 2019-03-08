@@ -74,7 +74,7 @@
       <p>The department has already changed some procedures in response to the Star Tribune analysis. The newspaper asked the department to review 50 high-priority calls — chosen at random — that took more than 30 minutes before officers arrived. In a number of those cases, the department discovered, callers likely waited longer because officers were transitioning between shifts. The data shows median response times rose dramatically during the 6 a.m. hour, when the day shift begins and calls are also at their lowest volume.</p>
 
       <Chart
-        title="Response time spikes at 6AM shift change"
+        title="Response time spikes at 6 a.m. shift change"
         type="step-line"
         padding="{{ top: 10, right: 20, bottom: 25, left: 30 }}"
         data="{ mpdHourData }"
@@ -85,7 +85,7 @@
         yMax="{ 20 }"
         yTickFormat="{ (d, i, len) => i === 0 || i === len - 1 ? '' : d }"
         yLabel="Median response time (minutes)"
-      >Median response time by the Minneapolis Police Department by hour for 2017.  During the 6AM hour, the median response time jumps up; this is also the hour with the lowest number of high-priority incidents.</Chart>
+      >Median response time of high-priority 911 calls in 2017 by hour for the Minneapolis Police Department.  During the 6 a.m. hour the median response time jumps up significantly; this is also the hour with the lowest number incidents.</Chart>
 
       <p>Now, Kjos said, precincts will keep a squad car available during shift change.</p>
 
@@ -156,7 +156,7 @@
 
         <p>The Star Tribune analyzed over 700,000+ dispatch incidents for the Minneapolis and St. Paul police departments for 2017.</p>
 
-        <p>In this analysis we focused on high-priority calls that were not initiated by an officer (i.e. a traffic stop or officer witnessing a crime).  "High-priority" in Minneapolis is defined as Priority code 1 or 0, and in St. Paul as Priority codes 2, 2A, and 1.  It is important to note that across and within each agency, what is high-priority is a range of types of incidents, and the priority may be altered or adjusted according to what happens during the call or once the officer arrives at a scene.</p>
+        <p>The analysis focused on high-priority calls that were not initiated by an officer (i.e. a traffic stop or officer witnessing a crime).  "High-priority" in Minneapolis is defined as Priority code 1 or 0, and in St. Paul as Priority codes 2, 2A, and 1.  It is important to note that across and within each agency, what is high-priority is a range of types of incidents, and the priority may be altered or adjusted according to what happens during the call or once the officer arrives at a scene.</p>
 
         <p>Incidents were considered initiated by officers either by a field in the data or calculated from timestamps in the data that indicated the incident was most-likely officer-initiated.</p>
 
@@ -252,7 +252,7 @@
 
         responseTimeMapOptions: {
           caption:
-            "The map above shows the median response times for high-priorty 911 calls in 2017 for the Minneapolis and St. Paul police departments in the Twin Cities as divided by quarter-mile hexagons.",
+            "Median response times for high-priorty 911 calls in 2017 for the Minneapolis and St. Paul police departments in the Twin Cities as divided by quarter-mile hexagons.",
           colorSteps: [60 * 6, 60 * 7.5, 60 * 9, 60 * 10.5, 60 * 12],
           colors: [
             "#ffffcc",
@@ -264,7 +264,7 @@
           ],
           legendTitle: "Response times of high-priority calls",
           extraLegendSteps: [
-            { class: "low-incidents", label: "Less than 10 incidents" },
+            { class: "low-incidents", label: "Fewer than 10 incidents" },
             { class: "no-incidents", label: "No incidents" }
           ],
           hexBaseStyles: ({ colorScale, colorSteps }) => {
@@ -312,7 +312,7 @@
 
         incidentsMapOptions: {
           caption:
-            "The map above shows the number of incidents for high priorty 911 calls in 2017 for the police in Minneapolis and St. Paul.",
+            "Number of incidents of high-priorty 911 calls in 2017 for the Minneapolis and St. Paul police departments in the Twin Cities as divided by quarter-mile hexagons.",
           colorSteps: [10, 50, 100, 250, 500],
           colors: [
             "#ffffd4",
