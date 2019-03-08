@@ -79,7 +79,7 @@ figure {
   left: 0;
   max-width: 100%;
   width: 100%;
-  z-index: 9999;
+  z-index: 99;
   display: none;
   padding: 2.5em 1em 1em;
   border-top: 1px solid map-get($grays, "medium");
@@ -236,7 +236,7 @@ label[for="address-search"] {
     height: 1.5em;
     width: 1.5em;
     display: inline-block;
-    margin-right: 0.5em;
+    margin-right: 0.25em;
     margin-bottom: 0.25em;
   }
 

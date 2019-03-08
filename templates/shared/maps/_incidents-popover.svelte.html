@@ -22,46 +22,42 @@
         <hr>
         Median call time: {
           feature.median_call_time && !isNaN(feature.median_call_time)
-            ? Math.round((feature.median_call_time / 60) * 10) / 10 + ' minutes'
+            ? secondsToMinutes(feature.median_call_time)
             : '-'
         }
         <br>
 
         Median drive time: {
           feature.median_drive_time && !isNaN(feature.median_drive_time)
-            ? Math.round((feature.median_drive_time / 60) * 10) / 10 + ' minutes'
+            ? secondsToMinutes(feature.median_drive_time)
             : '-'
         }
         <br>
 
         Median to-queue time: {
           feature.median_to_queue_time && !isNaN(feature.median_to_queue_time)
-            ? Math.round((feature.median_to_queue_time / 60) * 10) / 10 + ' minutes'
+            ? secondsToMinutes(feature.median_to_queue_time)
             : '-'
         }
         <br>
 
         Median in-queue time: {
           feature.median_in_queue_time && !isNaN(feature.median_in_queue_time)
-            ? Math.round((feature.median_in_queue_time / 60) * 10) / 10 + ' minutes'
+            ? secondsToMinutes(feature.median_in_queue_time)
             : '-'
         }
         <br>
       </div>
 
-      <div class="frequent-incident">
-        <hr>
-        Most frequent incident: {
-          feature.most_frequent_incident ? feature.most_frequent_incident : '-'
-        }
-        <br>
-
-        Incident frequency: {
-          feature.most_frequent_incident_count
-            ? feature.most_frequent_incident_count.toLocaleString()
-            : '-'
-        }
-      </div>
+      {#if feature.most_frequent_incident && feature.most_frequent_incident_count && feature.most_frequent_incident_count > 1}
+        <div class="frequent-incident">
+          <hr>
+          Most frequent, high-priority incident
+          ({ feature.most_frequent_incident_count.toLocaleString() } times):
+          <br>
+          { feature.most_frequent_incident ? feature.most_frequent_incident : '-' }
+        </div>
+      {/if}
     {/if}
   </div>
 </div>
@@ -83,7 +79,7 @@
     helpers: {
       isNaN,
 
-      secondsToMinutes(seconds, minuteSuffix = " m", secondSuffix = " s") {
+      secondsToMinutes(seconds, minuteSuffix = "m", secondSuffix = "s") {
         return (
           `${Math.floor(seconds / 60) || 0}${minuteSuffix}` +
           (seconds % 60 ? ` ${Math.round(seconds % 60)}${secondSuffix}` : "")
