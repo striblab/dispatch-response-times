@@ -152,19 +152,17 @@
 
         <h1>Methodology</h1>
 
-        <p>Dispatch data provided by the the City of Minneapolis and Ramsey County.</p>
+        <p>The Star Tribune analyzed more than 700,000 dispatch records involving Minneapolis and St. Paul police for 2017. The data included both 911 calls and officer-initiated incidents provided by Ramsey County and the city of Minneapolis.</p>
 
-        <p>The Star Tribune analyzed over 700,000+ dispatch incidents for the Minneapolis and St. Paul police departments for 2017.</p>
+        <p>The analysis focused on high-priority calls that were not initiated by an officer (i.e. a traffic stop or an officer witnessing a crime). "High-priority" comprised priority codes 1 and 0 in Minneapolis, and 2 and 1 in St. Paul. The two dispatch centers have different methods of prioritizing calls, and the priority level of a call is sometimes adjusted after additional information becomes available.</p>
 
-        <p>The analysis focused on high-priority calls that were not initiated by an officer (i.e. a traffic stop or officer witnessing a crime).  "High-priority" in Minneapolis is defined as Priority code 1 or 0, and in St. Paul as Priority codes 2, 2A, and 1.  It is important to note that across and within each agency, what is high-priority is a range of types of incidents, and the priority may be altered or adjusted according to what happens during the call or once the officer arrives at a scene.</p>
+        <p>Officer-initiated incidents were removed from the analysis using timestamps in the data.</p>
 
-        <p>Incidents were considered initiated by officers either by a field in the data or calculated from timestamps in the data that indicated the incident was most-likely officer-initiated.</p>
+        <p>Response times were calculated as the time between "First Keystroke" (or "Call Pickup", if keystroke data was not provided) to "First Unit Arrived". Any incidents where this could not be calculated was not included in the main analysis.</p>
 
-        <p>Response times were calculated as the time between "First Keystroke" (or "Call Pickup", if keystroke data was not provided) to "First Unit Arrived".  Any incidents where this could not be calculated was not included in our main analysis.</p>
+        <p>Records from incidents handled by the University of Minnesota police were not included in the analysis.</p>
 
-        <p>The University of Minnesota's police force dispatch was not included in the analysis since the data that was received did not include meaningful information about priority for each incident.</p>
-
-        <p>Code and more details for our analysis can be found <a href="https://github.com/striblab/dispatch-analysis" target="_blank" rel="noopener">here on Github</a>.</p>
+        <p>Code and more details for the analysis can be found <a href="https://github.com/striblab/dispatch-analysis" target="_blank" rel="noopener">here on Github</a>.</p>
       </footer>
     </div>
   </section>
