@@ -34,9 +34,9 @@
 {/if}
 
 <div class="container-xxl">
-  <figure class="map-figure { !mapboxSupported ? 'mapbox-no-support' : '' }">
+  <figure class="needsclick map-figure { !mapboxSupported ? 'mapbox-no-support' : '' }">
     {#if mapboxSupported}
-      <div class="map-highlight" id="{ id || '' }" ref:mapEl style="{ fallbackImage ? `background-image: url(${fallbackImage});` : '' }">
+      <div class="needsclick map-highlight" id="{ id || '' }" ref:mapEl style="{ fallbackImage ? `background-image: url(${fallbackImage});` : '' }">
         {#if popoverComponent}
           <svelte:component
             this={ popoverComponent }
@@ -153,6 +153,10 @@
           this.hexbins();
           this.pois();
           this.popover();
+
+          // Fastclick hack/fix
+          // https://github.com/mapbox/mapbox-gl-js/issues/2035
+          $(this.__map.getCanvas()).addClass("needsclick");
 
           this.set({ mapInitialized: true });
         });
